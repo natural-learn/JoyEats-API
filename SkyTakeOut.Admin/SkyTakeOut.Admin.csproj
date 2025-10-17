@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
+    <ProjectReference Include="..\SkyTakeOut.Common\SkyTakeOut.Common.csproj" />
   </ItemGroup>
 
 </Project>

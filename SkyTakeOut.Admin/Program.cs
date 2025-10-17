@@ -1,12 +1,14 @@
+using SkyTakeOut.Admin.Middlewares;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 
 builder.Services.AddControllers();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// 全局异常处理中间件
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 app.UseAuthorization();
 
