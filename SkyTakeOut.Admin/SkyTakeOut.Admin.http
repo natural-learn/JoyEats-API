@@ -1,0 +1,6 @@
+@SkyTakeOut.Admin_HostAddress = http://localhost:5228
+
+GET {{SkyTakeOut.Admin_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
