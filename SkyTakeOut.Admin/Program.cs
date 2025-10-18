@@ -6,6 +6,7 @@ using Serilog;
 using Serilog.Events;
 using SkyTakeOut.Admin.Middlewares;
 using SkyTakeOut.Core.Autofac;
+using SkyTakeOut.Core.Automapper;
 using SkyTakeOut.EntityFrameworkCore;
 using System.Reflection;
 
@@ -49,6 +50,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
            .LogTo(Console.WriteLine, LogLevel.Information)
            .EnableSensitiveDataLogging();
 });
+
+// Automapper
+builder.Services.AddAutoMapper(typeof(AutomapperProfile));
 
 builder.Services.AddControllers();
 

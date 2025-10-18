@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SkyTakeOut.Common\SkyTakeOut.Common.csproj" />
+    <ProjectReference Include="..\SkyTakeOut.Core\SkyTakeOut.Core.csproj" />
     <ProjectReference Include="..\SkyTakeOut.EntityFrameworkCore\SkyTakeOut.EntityFrameworkCore.csproj" />
   </ItemGroup>
 
