@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkyTakeOut.Models", "SkyTak
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkyTakeOut.EntityFrameworkCore", "SkyTakeOut.EntityFrameworkCore\SkyTakeOut.EntityFrameworkCore.csproj", "{EBFAD98C-7DE3-49DD-876E-8AF3B0B9C6F6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkyTakeOut.IRepository", "SkyTakeOut.IRepository\SkyTakeOut.IRepository.csproj", "{83256CF5-9685-4FA7-91E5-A46059579ABE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkyTakeOut.Repository", "SkyTakeOut.Repository\SkyTakeOut.Repository.csproj", "{463E81A7-77D4-4B66-BE1E-71A7D0B4E196}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,14 @@ Global
 		{EBFAD98C-7DE3-49DD-876E-8AF3B0B9C6F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EBFAD98C-7DE3-49DD-876E-8AF3B0B9C6F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EBFAD98C-7DE3-49DD-876E-8AF3B0B9C6F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83256CF5-9685-4FA7-91E5-A46059579ABE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83256CF5-9685-4FA7-91E5-A46059579ABE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83256CF5-9685-4FA7-91E5-A46059579ABE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83256CF5-9685-4FA7-91E5-A46059579ABE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{463E81A7-77D4-4B66-BE1E-71A7D0B4E196}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{463E81A7-77D4-4B66-BE1E-71A7D0B4E196}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{463E81A7-77D4-4B66-BE1E-71A7D0B4E196}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{463E81A7-77D4-4B66-BE1E-71A7D0B4E196}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
