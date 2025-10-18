@@ -21,4 +21,4 @@ namespace SkyTakeOut.Admin.Controllers
             return Ok("请求成功");
         }
     }
-}
+}   
