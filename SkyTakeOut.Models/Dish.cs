@@ -1,0 +1,38 @@
+﻿namespace SkyTakeOut.Models
+{
+    /// <summary>
+    /// 菜品
+    /// </summary>
+    public class Dish : BaseEntity
+    {
+        /// <summary>
+        /// 菜品名称
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// 菜品分类id
+        /// </summary>
+        public long CategoryId { get; set; }
+
+        /// <summary>
+        /// 菜品价格
+        /// </summary>
+        public decimal Price { get; set; }
+
+        /// <summary>
+        /// 图片
+        /// </summary>
+        public string Image { get; set; }
+
+        /// <summary>
+        /// 描述信息
+        /// </summary>
+        public string Description { get; set; }
+
+        /// <summary>
+        /// 0 停售 1 起售
+        /// </summary>
+        public int Status { get; set; }
+    }
+}

@@ -1,10 +1,12 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Events;
 using SkyTakeOut.Admin.Middlewares;
 using SkyTakeOut.Core.Autofac;
+using SkyTakeOut.EntityFrameworkCore;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -36,6 +38,16 @@ builder.Host.ConfigureContainer<ContainerBuilder>(builder =>
 
     // 注册控制器并启用属性注入
     builder.RegisterTypes(controllers).PropertiesAutowired();
+});
+
+// EntityFrameworkCore
+builder.Services.AddDbContext<AppDbContext>(options =>
+{
+    string connectionString = builder.Configuration.GetConnectionString("MySqlDbConnection") ?? throw new
+        InvalidOperationException("数据库连接字符串获取失败！");
+    options.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 31)))
+           .LogTo(Console.WriteLine, LogLevel.Information)
+           .EnableSensitiveDataLogging();
 });
 
 builder.Services.AddControllers();

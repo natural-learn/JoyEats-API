@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.21">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
     <PackageReference Include="Serilog.Sinks.Async" Version="2.1.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
@@ -15,6 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\SkyTakeOut.Common\SkyTakeOut.Common.csproj" />
     <ProjectReference Include="..\SkyTakeOut.Core\SkyTakeOut.Core.csproj" />
+    <ProjectReference Include="..\SkyTakeOut.EntityFrameworkCore\SkyTakeOut.EntityFrameworkCore.csproj" />
   </ItemGroup>
 
 </Project>
