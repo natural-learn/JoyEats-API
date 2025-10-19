@@ -85,5 +85,31 @@ namespace SkyTakeOut.Services
                 pageSize: employeePageQueryDTO.PageSize
             );
         }
+
+        /// <summary>
+        /// 启用禁用员工账号
+        /// </summary>
+        /// <param name="status"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task StartOrStopAsync(int status, long id)
+        {
+            if (id <= 0)
+            {
+                throw new ArgumentException("员工id必须为正整数");
+            }
+
+            var employee = await _employeeRepository.GetByIdAsync(id) ?? 
+                throw new EntityNotFoundException($"未找到id为{id}的员工");
+            
+            if (employee.Status == status)
+            {
+                return;
+            }
+
+            employee.Status = status;
+            _employeeRepository.Update(employee);
+            await _unitOfWork.SaveChangesAsync();
+        }
     }
 }

@@ -92,5 +92,20 @@ namespace SkyTakeOut.Admin.Controllers
             var pagedList = await _employeeService.PageQueryAsync(employeePageQueryDTO);
             return ApiResultHelper.Success(pagedList);
         }
+
+        /// <summary>
+        /// 启用禁用员工账号
+        /// </summary>
+        /// <param name="status"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPost("status/{status}")]
+        public async Task<ActionResult<ApiResult>> StartOrStop(int status, long id)
+        {
+            _logger.LogInformation("启用禁用员工账号：{@int},{@long}", status, id);
+            await _employeeService.StartOrStopAsync(status, id);
+            return ApiResultHelper.Success();
+        }
+
     }
 }

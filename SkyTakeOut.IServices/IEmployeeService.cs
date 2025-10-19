@@ -27,5 +27,13 @@ namespace SkyTakeOut.IServices
         /// <param name="employeePageQueryDTO"></param>
         /// <returns></returns>
         Task<PagedResult<Employee>> PageQueryAsync(EmployeePageQueryDTO employeePageQueryDTO);
+
+        /// <summary>
+        /// 启用禁用员工账号
+        /// </summary>
+        /// <param name="status"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task StartOrStopAsync(int status, long id);
     }
 }
