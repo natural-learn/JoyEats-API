@@ -35,5 +35,19 @@ namespace SkyTakeOut.IServices
         /// <param name="id"></param>
         /// <returns></returns>
         Task StartOrStopAsync(int status, long id);
+
+        /// <summary>
+        /// 根据id查询员工信息
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<Employee?> GetByIdAsync(long id);
+
+        /// <summary>
+        /// 编辑员工信息
+        /// </summary>
+        /// <param name="employeeDTO"></param>
+        /// <returns></returns>
+        Task UpdateEmployeeAsync(EmployeeDTO employeeDTO);
     }
 }

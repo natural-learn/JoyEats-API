@@ -111,5 +111,35 @@ namespace SkyTakeOut.Services
             _employeeRepository.Update(employee);
             await _unitOfWork.SaveChangesAsync();
         }
+
+        /// <summary>
+        /// 根据id查询员工信息
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public Task<Employee?> GetByIdAsync(long id)
+        {
+            if (id <= 0)
+            {
+                throw new ArgumentException("员工id必须为正整数");
+            }
+
+            return _employeeRepository.GetByIdAsync(id);
+        }
+
+        /// <summary>
+        /// 编辑员工信息
+        /// </summary>
+        /// <param name="employeeDTO"></param>
+        /// <returns></returns>
+        public async Task UpdateEmployeeAsync(EmployeeDTO employeeDTO)
+        {
+            var employee = await GetByIdAsync(employeeDTO.Id) ??
+                throw new EntityNotFoundException($"未找到id为{employeeDTO.Id}的员工"); ;
+
+            var newEmployee = Mapper.Map(employeeDTO, employee);
+            _employeeRepository.Update(newEmployee);
+            await _unitOfWork.SaveChangesAsync();
+        }
     }
 }

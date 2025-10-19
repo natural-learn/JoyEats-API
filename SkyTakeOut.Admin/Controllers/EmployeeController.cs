@@ -107,5 +107,34 @@ namespace SkyTakeOut.Admin.Controllers
             return ApiResultHelper.Success();
         }
 
+        /// <summary>
+        /// 根据Id查询员工信息
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("{id}")]
+        public async Task<ActionResult<ApiResult<Employee>>> GetById(long id)
+        {
+            Employee? employee = await _employeeService.GetByIdAsync(id);
+            if (employee != null)
+            {
+                employee.Password = "******";
+                return ApiResultHelper.Success(employee);
+            }
+            return ApiResultHelper.Error<Employee>("员工不存在");
+        }
+
+        /// <summary>
+        /// 编辑员工信息
+        /// </summary>
+        /// <param name="employeeDTO"></param>
+        /// <returns></returns>
+        [HttpPut]
+        public async Task<ActionResult<ApiResult>> Update([FromBody] EmployeeDTO employeeDTO)
+        {
+            _logger.LogInformation("编辑员工信息：{@EmployeeDTO}", employeeDTO);
+            await _employeeService.UpdateEmployeeAsync(employeeDTO);
+            return ApiResultHelper.Success();
+        }
     }
 }
