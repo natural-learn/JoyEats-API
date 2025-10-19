@@ -73,11 +73,24 @@ namespace SkyTakeOut.Admin.Controllers
         /// <param name="employeeDTO"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult<ApiResult>> Save([FromBody]EmployeeDTO employeeDTO)
+        public async Task<ActionResult<ApiResult>> Save([FromBody] EmployeeDTO employeeDTO)
         {
             _logger.LogInformation("新增员工：{@EmployeeDTO}", employeeDTO);
             await _employeeService.SaveAsync(employeeDTO);
             return ApiResultHelper.Success();
+        }
+
+        /// <summary>
+        /// 分页查询所有员工
+        /// </summary>
+        /// <param name="employeePageQueryDTO"></param>
+        /// <returns></returns>
+        [HttpGet("page")]
+        public async Task<ActionResult<ApiResult<PagedResult<Employee>>>> Page([FromQuery] EmployeePageQueryDTO employeePageQueryDTO)
+        {
+            _logger.LogInformation("员工分页查询：{@EmployeePageQueryDTO}", employeePageQueryDTO);
+            var pagedList = await _employeeService.PageQueryAsync(employeePageQueryDTO);
+            return ApiResultHelper.Success(pagedList);
         }
     }
 }

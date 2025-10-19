@@ -13,7 +13,7 @@ namespace SkyTakeOut.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IBaseRepository<Employee> _employeeRepository;
-        
+
 
         public EmployeeService(IUnitOfWork unitOfWork)
         {
@@ -69,5 +69,21 @@ namespace SkyTakeOut.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// 分页查询所有员工
+        /// </summary>
+        /// <param name="employeePageQueryDTO"></param>
+        /// <returns></returns>
+        public async Task<PagedResult<Employee>> PageQueryAsync(EmployeePageQueryDTO employeePageQueryDTO)
+        {
+            string name = employeePageQueryDTO.Name?.Trim() ?? "";
+            return await _employeeRepository.GetPagedListAsync(
+                predicate: string.IsNullOrEmpty(name) ? null : e => e.Name.Contains(name),
+                orderBy: e => e.CreateTime,
+                isAscending: true,
+                pageIndex: employeePageQueryDTO.Page,
+                pageSize: employeePageQueryDTO.PageSize
+            );
+        }
     }
 }

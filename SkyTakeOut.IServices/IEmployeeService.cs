@@ -1,4 +1,5 @@
-﻿using SkyTakeOut.Core.Autofac.DependencyInjection;
+﻿using SkyTakeOut.Common;
+using SkyTakeOut.Core.Autofac.DependencyInjection;
 using SkyTakeOut.Core.DTO.Employee;
 using SkyTakeOut.Models;
 
@@ -19,5 +20,12 @@ namespace SkyTakeOut.IServices
         /// <param name="employeeDTO"></param>
         /// <returns></returns>
         Task SaveAsync(EmployeeDTO employeeDTO);
+
+        /// <summary>
+        /// 分页查询所有员工
+        /// </summary>
+        /// <param name="employeePageQueryDTO"></param>
+        /// <returns></returns>
+        Task<PagedResult<Employee>> PageQueryAsync(EmployeePageQueryDTO employeePageQueryDTO);
     }
 }
