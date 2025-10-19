@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using SkyTakeOut.Core.DTO.Employee;
+using SkyTakeOut.Models;
 
 namespace SkyTakeOut.Core.Automapper
 {
@@ -6,7 +8,13 @@ namespace SkyTakeOut.Core.Automapper
     {
         public AutomapperProfile()
         {
-            
+            CreateMap<Employee, EmployeeDTO>()
+                .ReverseMap()
+                .ForAllMembers(opt =>
+                {
+                    opt.Condition((src, dest, srcMember) => srcMember != null);
+                });
+
         }
     }
 }

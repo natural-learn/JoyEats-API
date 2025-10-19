@@ -3,8 +3,6 @@ using SkyTakeOut.Common;
 using SkyTakeOut.Common.Helpers;
 using SkyTakeOut.Core.DTO.Employee;
 using SkyTakeOut.Core.VO;
-using SkyTakeOut.IRepository;
-using SkyTakeOut.IRepository.UnitOfWork;
 using SkyTakeOut.IServices;
 using SkyTakeOut.Models;
 
@@ -57,6 +55,29 @@ namespace SkyTakeOut.Admin.Controllers
                 Token = token
             };
             return ApiResultHelper.Success(employeeLoginVo);
+        }
+
+        /// <summary>
+        /// 退出登录
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("logout")]
+        public ActionResult<ApiResult> Logout()
+        {
+            return ApiResultHelper.Success();
+        }
+
+        /// <summary>
+        /// 新增员工
+        /// </summary>
+        /// <param name="employeeDTO"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult<ApiResult>> Save([FromBody]EmployeeDTO employeeDTO)
+        {
+            _logger.LogInformation("新增员工：{@EmployeeDTO}", employeeDTO);
+            await _employeeService.SaveAsync(employeeDTO);
+            return ApiResultHelper.Success();
         }
     }
 }

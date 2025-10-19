@@ -2,6 +2,8 @@
 using SkyTakeOut.Common.Constant;
 using SkyTakeOut.Core.DTO.Employee;
 using SkyTakeOut.Core.Exceptions;
+using SkyTakeOut.IRepository;
+using SkyTakeOut.IRepository.UnitOfWork;
 using SkyTakeOut.IServices;
 using SkyTakeOut.Models;
 
@@ -9,6 +11,16 @@ namespace SkyTakeOut.Services
 {
     public class EmployeeService : BaseService, IEmployeeService
     {
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IBaseRepository<Employee> _employeeRepository;
+        
+
+        public EmployeeService(IUnitOfWork unitOfWork)
+        {
+            _employeeRepository = unitOfWork.GetBaseRepository<Employee>();
+            _unitOfWork = unitOfWork;
+        }
+
         /// <summary>
         /// 登录
         /// </summary>
@@ -26,12 +38,35 @@ namespace SkyTakeOut.Services
             {
                 throw new PasswordErrorException(MessageConstant.PASSWORD_ERROR);
             }
-            if(employee.Status == StatusConstant.DISABLE)
+            if (employee.Status == StatusConstant.DISABLE)
             {
                 // 账号被锁定
                 throw new AccountLockedException(MessageConstant.ACCOUNT_LOCKED);
             }
             return employee;
+        }
+
+        /// <summary>
+        /// 新增员工
+        /// </summary>
+        /// <param name="employeeDTO"></param>
+        /// <returns></returns>
+        public async Task SaveAsync(EmployeeDTO employeeDTO)
+        {
+            Employee employee = Mapper.Map<Employee>(employeeDTO);
+
+            //设置账号状态，默认正常 1表示正常 0表示锁定
+            employee.Status = StatusConstant.ENABLE;
+
+            //设置密码，默认密码123456
+            employee.Password = PasswordHelper.HashPassword(PasswordConstant.DEFAULT_PASSWORD);
+
+            //设置当前记录的创建时间和修改时间
+            employee.CreateTime = DateTime.Now;
+            employee.UpdateTime = DateTime.Now;
+
+            await _employeeRepository.AddAsync(employee);
+            await _unitOfWork.SaveChangesAsync();
         }
 
     }

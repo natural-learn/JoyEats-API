@@ -12,5 +12,12 @@ namespace SkyTakeOut.IServices
         /// <param name="employeeLoginDTO"></param>
         /// <returns></returns>
         Task<Employee> LoginAsync(EmployeeLoginDTO employeeLoginDTO);
+
+        /// <summary>
+        /// 新增员工
+        /// </summary>
+        /// <param name="employeeDTO"></param>
+        /// <returns></returns>
+        Task SaveAsync(EmployeeDTO employeeDTO);
     }
 }
