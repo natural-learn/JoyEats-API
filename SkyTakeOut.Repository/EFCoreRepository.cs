@@ -104,6 +104,16 @@ namespace SkyTakeOut.Repository
         }
 
         /// <summary>
+        /// 返回所有数据
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public async Task<List<TEntity>> GetListAsync(CancellationToken cancellationToken = default)
+        {
+            return await _dbSet.ToListAsync(cancellationToken);
+        }
+
+        /// <summary>
         /// 返回符合条件的所有数据
         /// </summary>
         /// <param name="predicate"></param>

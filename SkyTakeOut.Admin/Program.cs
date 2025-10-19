@@ -5,10 +5,14 @@ using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Events;
 using SkyTakeOut.Admin.Middlewares;
+using SkyTakeOut.Common.Configs;
+using SkyTakeOut.Common.Helpers;
 using SkyTakeOut.Core.Autofac;
 using SkyTakeOut.Core.Automapper;
 using SkyTakeOut.EntityFrameworkCore;
 using System.Reflection;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -54,15 +58,59 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // Automapper
 builder.Services.AddAutoMapper(typeof(AutomapperProfile));
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        // api日期统一返回格式：（"yyyy-MM-dd HH:mm:ss"）
+        options.JsonSerializerOptions.Converters.Add(new DateTimeConverter());
+    });
+
+// JWT
+builder.Services.Configure<JwtAdminOptions>(builder.Configuration.GetSection("Jwt"));
+builder.Services.AddSingleton<JWTHelper>(_ => new JWTHelper(
+        secretKey: builder.Configuration["Jwt:Secret"],
+        issuer: builder.Configuration["Jwt:Issuer"],
+        expireMinutes: builder.Configuration.GetValue<int>("Jwt:ExpireMinutes")));
+
+// 跨域
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(builder => builder.WithOrigins(new string[]
+    {
+            "http://localhost:80",
+    }).AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
+});
 
 var app = builder.Build();
 
 // 全局异常处理中间件
 app.UseMiddleware<GlobalExceptionMiddleware>();
 
+app.UseCors();
+
 app.UseAuthorization();
 
 app.MapControllers();
 
 app.Run();
+
+
+public class DateTimeConverter : JsonConverter<DateTime>
+{
+    public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        if (reader.TokenType == JsonTokenType.String)
+        {
+            if (DateTime.TryParse(reader.GetString(), out DateTime dateTime))
+            {
+                return dateTime;
+            }
+        }
+        return reader.GetDateTime();
+    }
+
+    public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options)
+    {
+        writer.WriteStringValue(value.ToString("yyyy-MM-dd HH:mm:ss"));
+    }
+}
