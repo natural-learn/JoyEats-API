@@ -1,6 +1,7 @@
 ﻿using SkyTakeOut.Common;
 using SkyTakeOut.Common.Constant;
 using SkyTakeOut.Core.DTO.Category;
+using SkyTakeOut.Core.Exceptions;
 using SkyTakeOut.IRepository;
 using SkyTakeOut.IRepository.UnitOfWork;
 using SkyTakeOut.IServices;
@@ -13,11 +14,15 @@ namespace SkyTakeOut.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IBaseRepository<Category> _categoryRepository;
+        private readonly IBaseRepository<Dish> _dishRepository;
+        private readonly IBaseRepository<Setmeal> _setmealRepository;
 
         public CategoryService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
             _categoryRepository = unitOfWork.GetBaseRepository<Category>();
+            _dishRepository = unitOfWork.GetBaseRepository<Dish>();
+            _setmealRepository = unitOfWork.GetBaseRepository<Setmeal>();
         }
 
         /// <summary>
@@ -72,6 +77,31 @@ namespace SkyTakeOut.Services
                 orderBy: c => c.Sort,
                 pageIndex: categoryPageQueryDTO.Page,
                 pageSize: categoryPageQueryDTO.PageSize);
+        }
+
+        /// <summary>
+        /// 删除分类
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task DeleteByCategoryIdAsync(long id)
+        {
+            // 如果当前分类下有菜品，不能删除
+            bool exists = await _dishRepository.ExistsAsync(d => d.CategoryId == id);
+            if (exists)
+            {
+                throw new DeletionNotAllowedException(MessageConstant.CATEGORY_BE_RELATED_BY_DISH);
+            }
+
+            // 如果当前分类下有套餐，不能删除
+            exists = await _setmealRepository.ExistsAsync(s => s.CategoryId == id);
+            if (exists)
+            {
+                throw new DeletionNotAllowedException(MessageConstant.CATEGORY_BE_RELATED_BY_SETMEAL);
+            }
+
+            await _categoryRepository.DeleteByIdAsync(id);
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 }

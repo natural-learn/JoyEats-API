@@ -20,5 +20,12 @@ namespace SkyTakeOut.IServices
         /// <param name="categoryPageQueryDTO"></param>
         /// <returns></returns>
         Task<PagedResult<Category>> PageQueryAsync(CategoryPageQueryDTO categoryPageQueryDTO);
+
+        /// <summary>
+        /// 删除分类
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task DeleteByCategoryIdAsync(long id);
     }
 }

@@ -45,6 +45,21 @@ namespace SkyTakeOut.Admin.Controllers
             return ApiResultHelper.Success(pagedResult);
         }
 
-
+        /// <summary>
+        /// 删除分类
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete]
+        public async Task<ActionResult<ApiResult>> DeleteById(long id)
+        {
+            _logger.LogInformation("删除分类：{@long}", id);
+            if (id <= 0)
+            {
+                return ApiResultHelper.Error("分类id必须为正整数");
+            }
+            await _categoryService.DeleteByCategoryIdAsync(id);
+            return ApiResultHelper.Success();
+        }
     }
 }
