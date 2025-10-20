@@ -176,12 +176,15 @@ namespace SkyTakeOut.Repository
             bool isAscending = true,
             CancellationToken cancellationToken = default)
         {
-            var query = _dbSet.AsQueryable();
+            IQueryable<TEntity> query = _dbSet.AsNoTracking();
+
             if (predicate != null)
             {
                 query = query.Where(predicate);
             }
+
             var totalCount = await query.CountAsync(cancellationToken);
+
             if (orderBy != null)
             {
                 query = isAscending ? query.OrderBy(orderBy) : query.OrderByDescending(orderBy);

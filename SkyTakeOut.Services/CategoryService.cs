@@ -1,9 +1,11 @@
-﻿using SkyTakeOut.Common.Constant;
+﻿using SkyTakeOut.Common;
+using SkyTakeOut.Common.Constant;
 using SkyTakeOut.Core.DTO.Category;
 using SkyTakeOut.IRepository;
 using SkyTakeOut.IRepository.UnitOfWork;
 using SkyTakeOut.IServices;
 using SkyTakeOut.Models;
+using System.Linq.Expressions;
 
 namespace SkyTakeOut.Services
 {
@@ -21,7 +23,7 @@ namespace SkyTakeOut.Services
         /// <summary>
         /// 新增分类
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="categoryDTO"></param>
         /// <returns></returns>
         public async Task SaveAsync(CategoryDTO categoryDTO)
         {
@@ -47,6 +49,29 @@ namespace SkyTakeOut.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// 分类分页查询
+        /// </summary>
+        /// <param name="categoryPageQueryDTO"></param>
+        /// <returns></returns>
+        public async Task<PagedResult<Category>> PageQueryAsync(CategoryPageQueryDTO categoryPageQueryDTO)
+        {
+            string name = categoryPageQueryDTO.Name?.Trim() ?? "";
+            Expression<Func<Category, bool>>? predicate = c => true;
+            if (!string.IsNullOrEmpty(name))
+            {
+                predicate = predicate.And(c => c.Name.Contains(name));
+            }
+            if (categoryPageQueryDTO.Type.HasValue)
+            {
+                predicate = predicate.And(c => c.Type == categoryPageQueryDTO.Type.Value);
+            }
 
+            return await _categoryRepository.GetPagedListAsync(
+                predicate: predicate,
+                orderBy: c => c.Sort,
+                pageIndex: categoryPageQueryDTO.Page,
+                pageSize: categoryPageQueryDTO.PageSize);
+        }
     }
 }

@@ -4,11 +4,17 @@
     {
         public static Expression<Func<T, bool>> And<T>(this Expression<Func<T, bool>> left, Expression<Func<T, bool>> right)
         {
-            var parameter = left.Parameters[0];
+            if (left == null) return right;
+            if (right == null) return left;
 
-            var body = Expression.AndAlso(left.Body, RebindParameter(right.Body, right.Parameters[0], parameter));
+            // 替换right表达式的参数为left的参数（避免参数实例不一致）
+            var visitor = new ParameterRebinder(right.Parameters[0], left.Parameters[0]);
+            var rightBody = visitor.Visit(right.Body);
 
-            return Expression.Lambda<Func<T, bool>>(body, parameter);
+            // 组合为 left && right
+            return Expression.Lambda<Func<T, bool>>(
+                Expression.AndAlso(left.Body, rightBody),
+                left.Parameters);
         }
 
         public static Expression<Func<T, bool>> Or<T>(this Expression<Func<T, bool>> left, Expression<Func<T, bool>> right)
