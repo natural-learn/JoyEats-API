@@ -77,5 +77,22 @@ namespace SkyTakeOut.Admin.Controllers
             await _categoryService.UpdateCategoryAsync(categoryDTO);
             return ApiResultHelper.Success();
         }
+
+        /// <summary>
+        /// 启用、禁用分类
+        /// </summary>
+        /// <param name="status"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPost("status/{status}")]
+        public async Task<ActionResult<ApiResult>> StartOrStop(int status, long id)
+        {
+            if (id <= 0)
+            {
+                return ApiResultHelper.Error("分类id必须为正整数");
+            }
+            await _categoryService.StartOrStopAsync(status, id);
+            return ApiResultHelper.Success();
+        }
     }
 }

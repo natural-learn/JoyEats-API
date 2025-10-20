@@ -34,5 +34,13 @@ namespace SkyTakeOut.IServices
         /// <param name="categoryDTO"></param>
         /// <returns></returns>
         Task UpdateCategoryAsync(CategoryDTO categoryDTO);
+
+        /// <summary>
+        /// 启用、禁用分类
+        /// </summary>
+        /// <param name="status"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task StartOrStopAsync(int status, long id);
     }
 }

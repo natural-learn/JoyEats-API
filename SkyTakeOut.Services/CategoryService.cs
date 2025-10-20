@@ -117,5 +117,20 @@ namespace SkyTakeOut.Services
             _categoryRepository.Update(category);
             await _unitOfWork.SaveChangesAsync();
         }
+
+        /// <summary>
+        /// 启用、禁用分类
+        /// </summary>
+        /// <param name="status"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task StartOrStopAsync(int status, long id)
+        {
+            Category? category = await _categoryRepository.GetByIdAsync(id) ??
+                throw new EntityNotFoundException($"未找到Id为{id}的分类");
+            category.Status = status;
+            _categoryRepository.Update(category);
+            await _unitOfWork.SaveChangesAsync();
+        }
     }
 }
