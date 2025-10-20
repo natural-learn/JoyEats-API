@@ -94,5 +94,17 @@ namespace SkyTakeOut.Admin.Controllers
             await _categoryService.StartOrStopAsync(status, id);
             return ApiResultHelper.Success();
         }
+
+        /// <summary>
+        /// 根据类型查询分类
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        [HttpGet("list")]
+        public async Task<ActionResult<ApiResult<List<Category>>>> List(int type)
+        {
+            List<Category> list = await _categoryService.ListAsync(type);
+            return ApiResultHelper.Success(list);
+        }
     }
 }

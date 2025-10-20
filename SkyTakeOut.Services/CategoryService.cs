@@ -6,6 +6,7 @@ using SkyTakeOut.IRepository;
 using SkyTakeOut.IRepository.UnitOfWork;
 using SkyTakeOut.IServices;
 using SkyTakeOut.Models;
+using System;
 using System.Linq.Expressions;
 
 namespace SkyTakeOut.Services
@@ -131,6 +132,24 @@ namespace SkyTakeOut.Services
             category.Status = status;
             _categoryRepository.Update(category);
             await _unitOfWork.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// 根据类型查询分类
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public async Task<List<Category>> ListAsync(int type)
+        {
+            if (type == 0)
+            {
+                return await _categoryRepository.GetListAsync(
+                    predicate: c => c.Status == StatusConstant.ENABLE,
+                    orderBy: c => c.Sort);
+            }
+            return await _categoryRepository.GetListAsync(
+                    predicate: c => c.Status == StatusConstant.ENABLE && c.Type == type,
+                    orderBy: c => c.Sort);
         }
     }
 }

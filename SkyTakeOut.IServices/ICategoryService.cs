@@ -42,5 +42,12 @@ namespace SkyTakeOut.IServices
         /// <param name="id"></param>
         /// <returns></returns>
         Task StartOrStopAsync(int status, long id);
+
+        /// <summary>
+        /// 根据类型查询分类
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        Task<List<Category>> ListAsync(int type);
     }
 }
