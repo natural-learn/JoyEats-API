@@ -27,5 +27,12 @@ namespace SkyTakeOut.IServices
         /// <param name="id"></param>
         /// <returns></returns>
         Task DeleteByCategoryIdAsync(long id);
+
+        /// <summary>
+        /// 修改分类
+        /// </summary>
+        /// <param name="categoryDTO"></param>
+        /// <returns></returns>
+        Task UpdateCategoryAsync(CategoryDTO categoryDTO);
     }
 }

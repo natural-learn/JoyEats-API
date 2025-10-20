@@ -61,5 +61,21 @@ namespace SkyTakeOut.Admin.Controllers
             await _categoryService.DeleteByCategoryIdAsync(id);
             return ApiResultHelper.Success();
         }
+
+        /// <summary>
+        /// 修改分类
+        /// </summary>
+        /// <param name="categoryDTO"></param>
+        /// <returns></returns>
+        [HttpPut]
+        public async Task<ActionResult<ApiResult>> Update([FromBody] CategoryDTO categoryDTO)
+        {
+            if (categoryDTO.Id <= 0)
+            {
+                return ApiResultHelper.Error("分类id必须为正整数");
+            }
+            await _categoryService.UpdateCategoryAsync(categoryDTO);
+            return ApiResultHelper.Success();
+        }
     }
 }

@@ -103,5 +103,19 @@ namespace SkyTakeOut.Services
             await _categoryRepository.DeleteByIdAsync(id);
             await _unitOfWork.SaveChangesAsync();
         }
+
+        /// <summary>
+        /// 修改分类
+        /// </summary>
+        /// <param name="categoryDTO"></param>
+        /// <returns></returns>
+        public async Task UpdateCategoryAsync(CategoryDTO categoryDTO)
+        {
+            Category? category = await _categoryRepository.GetByIdAsync(categoryDTO.Id) ??
+                throw new EntityNotFoundException($"未找到Id为{categoryDTO.Id}的分类");
+            category = Mapper.Map(categoryDTO, category);
+            _categoryRepository.Update(category);
+            await _unitOfWork.SaveChangesAsync();
+        }
     }
 }
