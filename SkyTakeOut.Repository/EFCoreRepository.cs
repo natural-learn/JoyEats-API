@@ -230,5 +230,21 @@ namespace SkyTakeOut.Repository
         {
             return await _dbSet.Where(predicate).CountAsync(cancellationToken);
         }
+
+        /// <summary>
+        /// 判断是否存在满足条件的实体
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
+        {
+            if (predicate == null)
+            {
+                return await _dbSet.AnyAsync(cancellationToken);
+            }
+
+            return await _dbSet.AsNoTracking().AnyAsync(predicate, cancellationToken);
+        }
     }
 }

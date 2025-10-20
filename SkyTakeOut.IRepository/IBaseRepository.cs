@@ -138,6 +138,14 @@ namespace SkyTakeOut.IRepository
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// 判断是否存在满足条件的实体
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
         #endregion
 
         /// <summary>
