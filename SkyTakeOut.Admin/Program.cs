@@ -1,7 +1,9 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using Serilog.Events;
 using SkyTakeOut.Admin.Middlewares;
@@ -11,6 +13,7 @@ using SkyTakeOut.Core.Autofac;
 using SkyTakeOut.Core.Automapper;
 using SkyTakeOut.EntityFrameworkCore;
 using System.Reflection;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -66,11 +69,49 @@ builder.Services.AddControllers()
     });
 
 // JWT
-builder.Services.Configure<JwtAdminOptions>(builder.Configuration.GetSection("Jwt"));
-builder.Services.AddSingleton<JWTHelper>(_ => new JWTHelper(
-        secretKey: builder.Configuration["Jwt:Secret"],
-        issuer: builder.Configuration["Jwt:Issuer"],
-        expireMinutes: builder.Configuration.GetValue<int>("Jwt:ExpireMinutes")));
+builder.Services.Configure<JwtAdminSettings>(builder.Configuration.GetSection("Jwt"));
+var jwtSettings = builder.Configuration.GetSection("Jwt").Get<JwtAdminSettings>();
+builder.Services.AddScoped<JWTHelper>();
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidIssuer = jwtSettings.Issuer,
+        ValidateAudience = true,
+        ValidAudience = jwtSettings.Audience,
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Secret)),
+        ValidateLifetime = true,
+        ClockSkew = TimeSpan.FromMinutes(5)
+    };
+
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            var token = context.Request.Headers.TryGetValue("Token", out var tokenValue)
+                ? tokenValue.FirstOrDefault()
+                : null;
+            if (!string.IsNullOrEmpty(token))
+            {
+                context.Token = token;
+            }
+            return Task.CompletedTask;
+        }
+    };
+});
+builder.Services.AddAuthorization();
+
+//builder.Services.AddHttpContextAccessor();
+
+
 
 // ¿çÓò
 builder.Services.AddCors(options =>
@@ -87,6 +128,8 @@ var app = builder.Build();
 app.UseMiddleware<GlobalExceptionMiddleware>();
 
 app.UseCors();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

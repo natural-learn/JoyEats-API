@@ -41,11 +41,11 @@ namespace SkyTakeOut.Admin.Controllers
             string token = null;
             if (employee.Id == 1)
             {
-                token = _jWTHelper.CreateToken(employee.Id.ToString(), "admin");
+                token = _jWTHelper.CreateToken(employee.Id.ToString(), employee.Username, "admin");
             }
             else
             {
-                token = _jWTHelper.CreateToken(employee.Id.ToString(), "user");
+                token = _jWTHelper.CreateToken(employee.Id.ToString(), employee.Username, "user");
             }
             EmployeeLoginVo employeeLoginVo = new EmployeeLoginVo
             {

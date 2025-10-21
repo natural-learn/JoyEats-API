@@ -11,17 +11,18 @@ namespace SkyTakeOut.Admin.Controllers
     {
         private readonly ILogger<IndexController> _logger;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public IndexController(ILogger<IndexController> logger, IUnitOfWork unitOfWork)
+        public IndexController(ILogger<IndexController> logger, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor)
         {
             _logger = logger;
             _unitOfWork = unitOfWork;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         [HttpGet("hello")]
         public IActionResult Hello()
         {
-            _logger.LogInformation($"测试日志记录功能成功!!!");
             return Ok("请求成功");
         }
 

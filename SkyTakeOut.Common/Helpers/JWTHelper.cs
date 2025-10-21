@@ -1,4 +1,6 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using SkyTakeOut.Common.Configs;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -7,32 +9,29 @@ namespace SkyTakeOut.Common.Helpers
 {
     public class JWTHelper
     {
-        private readonly string _secretKey;
-        private readonly string _issuer;
-        private readonly int _expireMinutes;
+        private readonly JwtAdminSettings _jwtAdminSettings;
 
-        public JWTHelper(string secretKey, string issuer, int expireMinutes)
+        public JWTHelper(IOptions<JwtAdminSettings> options)
         {
-            _secretKey = secretKey;
-            _issuer = issuer;
-            _expireMinutes = expireMinutes;
+            _jwtAdminSettings = options.Value;
         }
 
-        public string CreateToken(string id, string role)
+        public string CreateToken(string id, string userName, string role)
         {
-            byte[] secKeyBytes = Encoding.UTF8.GetBytes(_secretKey);
+            byte[] secKeyBytes = Encoding.UTF8.GetBytes(_jwtAdminSettings.Secret);
             var secKey = new SymmetricSecurityKey(secKeyBytes);
             var credentials = new SigningCredentials(secKey, SecurityAlgorithms.HmacSha256Signature);
             var claims = new[]
             {
-                new Claim("id", id),
+                new Claim(ClaimTypes.NameIdentifier, id),
+                new Claim(ClaimTypes.Name, userName),
                 new Claim(ClaimTypes.Role, role),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
             var tokenDescriptor = new JwtSecurityToken(
-                _issuer,
+                _jwtAdminSettings.Issuer,
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(_expireMinutes),
+                audience: _jwtAdminSettings.Audience,
+                expires: DateTime.UtcNow.AddMinutes(_jwtAdminSettings.ExpireMinutes),
                 signingCredentials: credentials
             );
             return new JwtSecurityTokenHandler().WriteToken(tokenDescriptor);
