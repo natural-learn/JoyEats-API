@@ -6,6 +6,11 @@
     public class Category : BaseEntity
     {
         /// <summary>
+        /// 主键
+        /// </summary>           
+        public long Id { get; set; }
+
+        /// <summary>
         /// 类型：1 菜品分类 2 套餐分类
         /// </summary>
         public int? Type { get; set; }

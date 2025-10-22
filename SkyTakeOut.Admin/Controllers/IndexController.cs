@@ -1,7 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SkyTakeOut.Common;
+using SkyTakeOut.Common.Constant;
+using SkyTakeOut.Common.Helpers.Redis;
 using SkyTakeOut.IRepository.UnitOfWork;
 using SkyTakeOut.Models;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace SkyTakeOut.Admin.Controllers
 {
@@ -21,9 +25,9 @@ namespace SkyTakeOut.Admin.Controllers
         }
 
         [HttpGet("hello")]
-        public IActionResult Hello()
+        public async Task<IActionResult> Hello()
         {
-            return Ok("请求成功");
+            return Ok($"请求成功，获取到当前登录用户Id：{await StackExchangeRedisHelper.StringGetAsync(RedisConstant.EmployeeId)}");
         }
 
         [HttpGet("insertData")]

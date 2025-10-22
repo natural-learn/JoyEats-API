@@ -6,6 +6,11 @@
     public class Dish : BaseEntity
     {
         /// <summary>
+        /// 主键
+        /// </summary>           
+        public long Id { get; set; }
+
+        /// <summary>
         /// 菜品名称
         /// </summary>
         public string Name { get; set; }

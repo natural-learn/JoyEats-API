@@ -3,11 +3,6 @@
     public class BaseEntity
     {
         /// <summary>
-        /// 主键
-        /// </summary>           
-        public long Id { get; set; }
-
-        /// <summary>
         /// 创建时间
         /// </summary>
         public DateTime? CreateTime { get; set; } = DateTime.Now;

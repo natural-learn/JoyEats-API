@@ -1,6 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using SkyTakeOut.Common;
+using SkyTakeOut.Common.Configs;
+using SkyTakeOut.Common.Constant;
 using SkyTakeOut.Common.Helpers;
+using SkyTakeOut.Common.Helpers.Redis;
 using SkyTakeOut.Core.DTO.Employee;
 using SkyTakeOut.Core.VO;
 using SkyTakeOut.IServices;
@@ -17,12 +21,17 @@ namespace SkyTakeOut.Admin.Controllers
     {
         private readonly ILogger<EmployeeController> _logger;
         private readonly IEmployeeService _employeeService;
+        private readonly JwtAdminSettings _jwtAdminSettings;
         private readonly JWTHelper _jWTHelper;
 
-        public EmployeeController(ILogger<EmployeeController> logger, IEmployeeService employeeService, JWTHelper jWTHelper)
+        public EmployeeController(ILogger<EmployeeController> logger, 
+            IEmployeeService employeeService, 
+            IOptions<JwtAdminSettings> options,
+            JWTHelper jWTHelper)
         {
             _logger = logger;
             _employeeService = employeeService;
+            _jwtAdminSettings = options.Value;
             _jWTHelper = jWTHelper;
         }
 
@@ -54,6 +63,8 @@ namespace SkyTakeOut.Admin.Controllers
                 Username = employee.Username,
                 Token = token
             };
+
+            await StackExchangeRedisHelper.StringSetAsync(RedisConstant.EmployeeId, employee.Id.ToString(), TimeSpan.FromMinutes(_jwtAdminSettings.ExpireMinutes));
             return ApiResultHelper.Success(employeeLoginVo);
         }
 

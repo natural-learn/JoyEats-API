@@ -6,6 +6,11 @@
     public class Employee : BaseEntity
     {
         /// <summary>
+        /// 主键
+        /// </summary>           
+        public long Id { get; set; }
+
+        /// <summary>
         /// 姓名
         /// </summary>
         public string Name { get; set; }

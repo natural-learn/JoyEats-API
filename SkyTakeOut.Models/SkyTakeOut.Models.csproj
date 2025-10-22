@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SkyTakeOut.Common\SkyTakeOut.Common.csproj" />
+  </ItemGroup>
+
 </Project>

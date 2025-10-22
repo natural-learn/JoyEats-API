@@ -6,6 +6,11 @@
     public class Setmeal : BaseEntity
     {
         /// <summary>
+        /// 主键
+        /// </summary>           
+        public long Id { get; set; }
+
+        /// <summary>
         /// 菜品分类id
         /// </summary>
         public long CategoryId { get; set; }

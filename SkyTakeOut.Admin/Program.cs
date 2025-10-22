@@ -12,6 +12,7 @@ using SkyTakeOut.Common.Helpers;
 using SkyTakeOut.Core.Autofac;
 using SkyTakeOut.Core.Automapper;
 using SkyTakeOut.EntityFrameworkCore;
+using SkyTakeOut.EntityFrameworkCore.Interceptor;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
@@ -54,9 +55,11 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     string connectionString = builder.Configuration.GetConnectionString("MySqlDbConnection") ?? throw new
         InvalidOperationException("数据库连接字符串获取失败！");
     options.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 31)))
+           .AddInterceptors(new AuditInterceptor())
            .LogTo(Console.WriteLine, LogLevel.Information)
            .EnableSensitiveDataLogging();
 });
+
 
 // Automapper
 builder.Services.AddAutoMapper(typeof(AutomapperProfile));
@@ -109,7 +112,7 @@ builder.Services.AddAuthentication(options =>
 });
 builder.Services.AddAuthorization();
 
-//builder.Services.AddHttpContextAccessor();
+builder.Services.AddHttpContextAccessor();
 
 
 
