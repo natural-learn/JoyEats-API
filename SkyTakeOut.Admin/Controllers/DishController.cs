@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SkyTakeOut.Common;
 using SkyTakeOut.Core.DTO.Dish;
+using SkyTakeOut.IServices;
 
 namespace SkyTakeOut.Admin.Controllers
 {
@@ -12,10 +13,12 @@ namespace SkyTakeOut.Admin.Controllers
     public class DishController : ControllerBase
     {
         private readonly ILogger<DishController> _logger;
+        private readonly IDishService _dishService;
 
-        public DishController(ILogger<DishController> logger)
+        public DishController(ILogger<DishController> logger, IDishService dishService)
         {
             _logger = logger;
+            _dishService = dishService;
         }
 
         /// <summary>
@@ -27,6 +30,8 @@ namespace SkyTakeOut.Admin.Controllers
         public async Task<ActionResult<ApiResult>> Save([FromBody] DishDTO dishDTO)
         {
             _logger.LogInformation("新增菜品：{@DishDTO}", dishDTO);
+            await _dishService.SaveWithFlavorAsync(dishDTO);
+
             return ApiResultHelper.Success();
         }
     }
