@@ -4,21 +4,24 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Minio;
 using Serilog;
 using Serilog.Events;
 using SkyTakeOut.Admin.Middlewares;
 using SkyTakeOut.Common.Configs;
+using SkyTakeOut.Common.Converter;
 using SkyTakeOut.Common.Helpers;
 using SkyTakeOut.Core.Autofac;
 using SkyTakeOut.Core.Automapper;
 using SkyTakeOut.EntityFrameworkCore;
 using SkyTakeOut.EntityFrameworkCore.Interceptor;
+using System.Net;
 using System.Reflection;
 using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
+
+ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
 // 日志记录
 Log.Logger = new LoggerConfiguration()
@@ -114,8 +117,6 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddHttpContextAccessor();
 
-
-
 // 跨域
 builder.Services.AddCors(options =>
 {
@@ -124,6 +125,28 @@ builder.Services.AddCors(options =>
             "http://localhost:80",
     }).AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
 });
+
+// Minio
+builder.Services.AddOptions<MinioSettings>()
+    .Bind(builder.Configuration.GetSection("Minio"))
+    .ValidateDataAnnotations()
+    .Validate(config =>
+    {
+        if (string.IsNullOrWhiteSpace(config.Endpoint))
+            throw new ArgumentException("Minio配置缺少Endpoint");
+        if (string.IsNullOrWhiteSpace(config.AccessKey))
+            throw new ArgumentException("Minio配置缺少AccessKey");
+        if (string.IsNullOrWhiteSpace(config.SecretKey))
+            throw new ArgumentException("Minio配置缺少SecretKey");
+        return true;
+    }, "Minio配置不完整");
+var minioSettings = builder.Configuration.GetSection("Minio").Get<MinioSettings>();
+builder.Services.AddMinio(configureClient => configureClient
+    .WithEndpoint(minioSettings.Endpoint)
+    .WithCredentials(minioSettings.AccessKey, minioSettings.SecretKey)
+    .WithSSL(false)
+    .Build());
+
 
 var app = builder.Build();
 
@@ -139,24 +162,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-
-
-public class DateTimeConverter : JsonConverter<DateTime>
-{
-    public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-    {
-        if (reader.TokenType == JsonTokenType.String)
-        {
-            if (DateTime.TryParse(reader.GetString(), out DateTime dateTime))
-            {
-                return dateTime;
-            }
-        }
-        return reader.GetDateTime();
-    }
-
-    public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options)
-    {
-        writer.WriteStringValue(value.ToString("yyyy-MM-dd HH:mm:ss"));
-    }
-}
