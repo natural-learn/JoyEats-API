@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SkyTakeOut.Common;
 using SkyTakeOut.Core.DTO.Dish;
+using SkyTakeOut.Core.VO.Dish;
 using SkyTakeOut.IServices;
 
 namespace SkyTakeOut.Admin.Controllers
@@ -33,6 +34,19 @@ namespace SkyTakeOut.Admin.Controllers
             await _dishService.SaveWithFlavorAsync(dishDTO);
 
             return ApiResultHelper.Success();
+        }
+
+        /// <summary>
+        /// 菜品分页查询
+        /// </summary>
+        /// <param name="dishPageQueryDTO"></param>
+        /// <returns></returns>
+        [HttpGet("page")]
+        public async Task<ActionResult<ApiResult<PagedResult<DishVo>>>> Page([FromQuery] DishPageQueryDTO dishPageQueryDTO)
+        {
+            _logger.LogInformation("菜品分页查询：{@DishPageQueryDTO}", dishPageQueryDTO);
+            var pagedResult = await _dishService.PageQueryAsync(dishPageQueryDTO);
+            return ApiResultHelper.Success(pagedResult);
         }
     }
 }

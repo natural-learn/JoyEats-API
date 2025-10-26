@@ -214,6 +214,15 @@ namespace SkyTakeOut.Repository
         }
 
         /// <summary>
+        /// 允许对外返回IQueryable，用于复杂查询
+        /// </summary>
+        /// <returns></returns>
+        public IQueryable<TEntity> GetQueryable()
+        {
+            return _dbSet.AsQueryable();
+        }
+
+        /// <summary>
         /// 更新数据
         /// </summary>
         /// <param name="entity"></param>

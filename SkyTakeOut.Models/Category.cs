@@ -29,5 +29,10 @@
         /// 分类状态 0:禁用，1:启用
         /// </summary>
         public int? Status { get; set; }
+
+        /// <summary>
+        /// 导航属性，一个分类下有多个菜品
+        /// </summary>
+        public ICollection<Dish> Dishes { get; set; } = new List<Dish>();
     }
 }

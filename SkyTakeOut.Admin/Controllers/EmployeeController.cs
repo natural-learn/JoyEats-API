@@ -6,7 +6,7 @@ using SkyTakeOut.Common.Constant;
 using SkyTakeOut.Common.Helpers;
 using SkyTakeOut.Common.Helpers.Redis;
 using SkyTakeOut.Core.DTO.Employee;
-using SkyTakeOut.Core.VO;
+using SkyTakeOut.Core.VO.Employee;
 using SkyTakeOut.IServices;
 using SkyTakeOut.Models;
 

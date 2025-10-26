@@ -29,8 +29,6 @@ namespace SkyTakeOut.EntityFrameworkCore.Interceptor
             try
             {
                 var employeeId = long.Parse((await StackExchangeRedisHelper.StringGetAsync(RedisConstant.EmployeeId)));
-                Console.WriteLine($"获取到employeeId：{employeeId}");
-                Console.WriteLine($"Redis获取到employeeId：{await StackExchangeRedisHelper.StringGetAsync(RedisConstant.EmployeeId)}");
                 
                 foreach (var entry in context.ChangeTracker.Entries<BaseEntity>())
                 {
@@ -56,9 +54,9 @@ namespace SkyTakeOut.EntityFrameworkCore.Interceptor
                     }
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                throw new InvalidOperationException(ex.Message);
+                throw new InvalidOperationException("获取员工Id失败，请重新登录");
             }
         }
     }

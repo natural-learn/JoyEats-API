@@ -1,4 +1,4 @@
-﻿namespace SkyTakeOut.Core.VO
+﻿namespace SkyTakeOut.Core.VO.Employee
 {
     public class EmployeeLoginVo
     {

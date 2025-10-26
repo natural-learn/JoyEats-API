@@ -1,5 +1,7 @@
-﻿using SkyTakeOut.Core.Autofac.DependencyInjection;
+﻿using SkyTakeOut.Common;
+using SkyTakeOut.Core.Autofac.DependencyInjection;
 using SkyTakeOut.Core.DTO.Dish;
+using SkyTakeOut.Core.VO.Dish;
 
 namespace SkyTakeOut.IServices
 {
@@ -12,6 +14,11 @@ namespace SkyTakeOut.IServices
         /// <returns></returns>
         Task SaveWithFlavorAsync(DishDTO dishDTO);
 
-
+        /// <summary>
+        /// 菜品分页查询
+        /// </summary>
+        /// <param name="dishPageQueryDTO"></param>
+        /// <returns></returns>
+        Task<PagedResult<DishVo>> PageQueryAsync(DishPageQueryDTO dishPageQueryDTO);
     }
 }

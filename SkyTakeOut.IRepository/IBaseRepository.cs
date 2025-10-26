@@ -132,6 +132,12 @@ namespace SkyTakeOut.IRepository
                                                      CancellationToken cancellationToken = default);
 
         /// <summary>
+        /// 允许对外返回IQueryable，用于复杂查询
+        /// </summary>
+        /// <returns></returns>
+        IQueryable<TEntity> GetQueryable();
+
+        /// <summary>
         /// 返回符合条件的数量
         /// </summary>
         /// <param name="predicate"></param>

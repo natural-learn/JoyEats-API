@@ -1,13 +1,9 @@
-﻿namespace SkyTakeOut.Models
+﻿using SkyTakeOut.Models;
+
+namespace SkyTakeOut.Core.VO.Dish
 {
-    /// <summary>
-    /// 菜品
-    /// </summary>
-    public class Dish : BaseEntity
+    public class DishVo
     {
-        /// <summary>
-        /// 主键
-        /// </summary>           
         public long Id { get; set; }
 
         /// <summary>
@@ -16,14 +12,9 @@
         public string Name { get; set; }
 
         /// <summary>
-        /// 菜品分类id
+        /// 分类Id
         /// </summary>
         public long CategoryId { get; set; }
-
-        /// <summary>
-        /// 导航属性：一个菜品属于一个分类
-        /// </summary>
-        public Category Category { get; set; }
 
         /// <summary>
         /// 菜品价格
@@ -44,5 +35,20 @@
         /// 0 停售 1 起售
         /// </summary>
         public int Status { get; set; }
+
+        /// <summary>
+        /// 更新时间
+        /// </summary>
+        public DateTime? UpdateTime { get; set; }
+
+        /// <summary>
+        /// 分类名称
+        /// </summary>
+        public string CategoryName { get; set; }
+
+        /// <summary>
+        /// 菜品关联的口味
+        /// </summary>
+        public List<DishFlavor> Flavors { get; set; } = new List<DishFlavor>();
     }
 }
