@@ -40,19 +40,26 @@ namespace SkyTakeOut.Repository
         }
 
         /// <summary>
-        /// 
+        /// 删除数据
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public void DeleteAsync(TEntity entity, CancellationToken cancellationToken = default)
+        public void Remove(TEntity entity)
         {
             _dbSet.Remove(entity);
         }
 
-        public async Task DeleteByIdAsync<TKey>(TKey id, CancellationToken cancellationToken = default)
+        /// <summary>
+        /// 根据主键删除数据
+        /// </summary>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="id"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public async Task RemoveByIdAsync<TKey>(TKey id, CancellationToken cancellationToken = default)
         {
-            var entity = await _dbSet.FindAsync(new object[] { id }, cancellationToken);
+            var entity = await GetByIdAsync(id, cancellationToken);
             if (entity != null)
             {
                 _dbSet.Remove(entity);
@@ -64,7 +71,7 @@ namespace SkyTakeOut.Repository
         /// </summary>
         /// <param name="entities"></param>
         /// <param name="cancellationToken"></param>
-        public void DeleteRangeAsync(IEnumerable<TEntity> entities)
+        public void RemoveRangeAsync(IEnumerable<TEntity> entities)
         {
             _dbSet.RemoveRange(entities);
         }

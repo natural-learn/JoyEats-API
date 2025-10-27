@@ -38,7 +38,7 @@ namespace SkyTakeOut.IRepository
         /// <param name="entity">要删除的实体</param>
         /// <param name="cancellationToken">取消异步操作</param>
         /// <returns></returns>
-        void DeleteAsync(TEntity entity, CancellationToken cancellationToken = default);
+        void Remove(TEntity entity);
 
         /// <summary>
         /// 根据主键删除数据
@@ -47,7 +47,7 @@ namespace SkyTakeOut.IRepository
         /// <param name="id"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task DeleteByIdAsync<TKey>(TKey id, CancellationToken cancellationToken = default);
+        Task RemoveByIdAsync<TKey>(TKey id, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 批量删除数据
@@ -55,7 +55,7 @@ namespace SkyTakeOut.IRepository
         /// <param name="entities"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        void DeleteRangeAsync(IEnumerable<TEntity> entities);
+        void RemoveRangeAsync(IEnumerable<TEntity> entities);
         #endregion
 
         #region 更新

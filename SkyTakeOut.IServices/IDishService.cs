@@ -35,5 +35,19 @@ namespace SkyTakeOut.IServices
         /// <param name="id"></param>
         /// <returns></returns>
         Task StartOrStopAsync(int status, long id);
+
+        /// <summary>
+        /// 根据id查询菜品和对应的口味数据
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<DishVo> GetByIdWithFlavorAsync(long id);
+
+        /// <summary>
+        /// 根据id修改菜品基本信息和对应的口味信息
+        /// </summary>
+        /// <param name="dishDTO"></param>
+        /// <returns></returns>
+        Task UpdateWithFlavorAsync(DishDTO dishDTO);
     }
 }

@@ -101,7 +101,7 @@ namespace SkyTakeOut.Services
                 throw new DeletionNotAllowedException(MessageConstant.CATEGORY_BE_RELATED_BY_SETMEAL);
             }
 
-            await _categoryRepository.DeleteByIdAsync(id);
+            await _categoryRepository.RemoveByIdAsync(id);
             await _unitOfWork.SaveChangesAsync();
         }
 

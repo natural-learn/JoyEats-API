@@ -55,7 +55,7 @@ namespace SkyTakeOut.Admin.Controllers
         /// <param name="ids"></param>
         /// <returns></returns>
         [HttpDelete]
-        public async Task<ActionResult<ApiResult>> Delete([FromQuery]string ids)
+        public async Task<ActionResult<ApiResult>> Delete([FromQuery] string ids)
         {
             _logger.LogInformation("菜品批量删除：{@List<long>}", ids);
             List<long> idList = [];
@@ -87,5 +87,33 @@ namespace SkyTakeOut.Admin.Controllers
             await _dishService.StartOrStopAsync(status, id);
             return ApiResultHelper.Success();
         }
+
+        /// <summary>
+        /// 根据Id查询菜品
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("{id}")]
+        public async Task<ActionResult<ApiResult<DishVo>>> GetById(long id)
+        {
+            _logger.LogInformation("根据Id查询菜品：{Id}", id);
+            DishVo dishVo = await _dishService.GetByIdWithFlavorAsync(id);
+            return ApiResultHelper.Success(dishVo);
+        }
+
+        /// <summary>
+        /// 修改菜品
+        /// </summary>
+        /// <param name="dishDTO"></param>
+        /// <returns></returns>
+        [HttpPut]
+        public async Task<ActionResult<ApiResult>> Update([FromBody] DishDTO dishDTO)
+        {
+            _logger.LogInformation("修改菜品：{@DishDTO}", dishDTO);
+            await _dishService.UpdateWithFlavorAsync(dishDTO);
+            return ApiResultHelper.Success();
+        }
+
+
     }
 }

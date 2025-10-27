@@ -2,6 +2,7 @@
 using SkyTakeOut.Core.DTO.Category;
 using SkyTakeOut.Core.DTO.Dish;
 using SkyTakeOut.Core.DTO.Employee;
+using SkyTakeOut.Core.VO.Dish;
 using SkyTakeOut.Models;
 
 namespace SkyTakeOut.Core.Automapper
@@ -30,6 +31,8 @@ namespace SkyTakeOut.Core.Automapper
                 {
                     opt.Condition((src, dest, srcMember) => srcMember != null);
                 });
+
+            CreateMap<Dish, DishVo>().ReverseMap();
         }
     }
 }

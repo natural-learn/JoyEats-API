@@ -160,5 +160,61 @@ namespace SkyTakeOut.Services
             _dishRepository.Update(dish);
             await _unitOfWork.SaveChangesAsync();
         }
+
+        /// <summary>
+        /// 根据id查询菜品和对应的口味数据
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<DishVo> GetByIdWithFlavorAsync(long id)
+        {
+            if (id <= 0)
+            {
+                throw new ArgumentException("菜品id必须为正整数");
+            }
+
+            Dish? dish = await _dishRepository.GetByIdAsync(id) ??
+                throw new EntityNotFoundException($"未找到id为{id}的菜品");
+            List<DishFlavor> dishFlavors = await _dishFlavorRepository.GetListAsync(df => df.DishId == id);
+            DishVo dishVo = Mapper.Map<DishVo>(dish);
+            dishVo.Flavors = dishFlavors;
+            return dishVo;
+        }
+
+        /// <summary>
+        /// 根据id修改菜品基本信息和对应的口味信息
+        /// </summary>
+        /// <param name="dishDTO"></param>
+        /// <returns></returns>
+        public async Task UpdateWithFlavorAsync(DishDTO dishDTO)
+        {
+            if (dishDTO.Id <= 0)
+            {
+                throw new ArgumentException("菜品id必须为正整数");
+            }
+
+            Dish? dish = await _dishRepository.GetByIdAsync(dishDTO.Id) ??
+                throw new EntityNotFoundException($"未找到id为{dishDTO.Id}的菜品");
+
+            dish = Mapper.Map(dishDTO, dish);
+            _dishRepository.Update(dish);
+
+            // 修改口味信息
+            DishFlavor? dishFlavor = await _dishFlavorRepository.FirstOrDefaultAsync(df => df.DishId == dishDTO.Id);
+            if (dishFlavor != null)
+            {
+                _dishFlavorRepository.Remove(dishFlavor);
+                List<DishFlavor> dishFlavors = dishDTO.Flavors;
+                if (dishFlavors != null && dishFlavors.Count > 0)
+                {
+                    foreach (var flavor in dishFlavors)
+                    {
+                        flavor.DishId = dishDTO.Id;
+                    }
+                    await _dishFlavorRepository.AddRangeAsync(dishFlavors);
+                }
+            }
+            await _unitOfWork.SaveChangesAsync();
+        }
     }
 }
