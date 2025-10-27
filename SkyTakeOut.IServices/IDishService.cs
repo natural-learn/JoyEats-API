@@ -20,5 +20,20 @@ namespace SkyTakeOut.IServices
         /// <param name="dishPageQueryDTO"></param>
         /// <returns></returns>
         Task<PagedResult<DishVo>> PageQueryAsync(DishPageQueryDTO dishPageQueryDTO);
+
+        /// <summary>
+        /// 菜品批量删除
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        Task DeleteBatchAsync(List<long> ids);
+
+        /// <summary>
+        /// 菜品启售停售
+        /// </summary>
+        /// <param name="status"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task StartOrStopAsync(int status, long id);
     }
 }

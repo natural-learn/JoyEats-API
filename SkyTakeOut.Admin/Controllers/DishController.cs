@@ -48,5 +48,44 @@ namespace SkyTakeOut.Admin.Controllers
             var pagedResult = await _dishService.PageQueryAsync(dishPageQueryDTO);
             return ApiResultHelper.Success(pagedResult);
         }
+
+        /// <summary>
+        /// 菜品批量删除
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        [HttpDelete]
+        public async Task<ActionResult<ApiResult>> Delete([FromQuery]string ids)
+        {
+            _logger.LogInformation("菜品批量删除：{@List<long>}", ids);
+            List<long> idList = [];
+            foreach (var str in ids.Split(','))
+            {
+                if (long.TryParse(str.Trim(), out long result))
+                {
+                    idList.Add(result);
+                }
+                else
+                {
+                    throw new InvalidOperationException("参数ids有非法的值");
+                }
+            }
+
+            await _dishService.DeleteBatchAsync(idList);
+            return ApiResultHelper.Success();
+        }
+
+        /// <summary>
+        /// 菜品启售停售
+        /// </summary>
+        /// <param name="status"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPost("status/{status}")]
+        public async Task<ActionResult<ApiResult>> StartOrStop(int status, long id)
+        {
+            await _dishService.StartOrStopAsync(status, id);
+            return ApiResultHelper.Success();
+        }
     }
 }
