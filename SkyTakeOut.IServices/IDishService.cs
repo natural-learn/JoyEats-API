@@ -2,6 +2,7 @@
 using SkyTakeOut.Core.Autofac.DependencyInjection;
 using SkyTakeOut.Core.DTO.Dish;
 using SkyTakeOut.Core.VO.Dish;
+using SkyTakeOut.Models;
 
 namespace SkyTakeOut.IServices
 {
@@ -49,5 +50,12 @@ namespace SkyTakeOut.IServices
         /// <param name="dishDTO"></param>
         /// <returns></returns>
         Task UpdateWithFlavorAsync(DishDTO dishDTO);
+
+        /// <summary>
+        /// 根据分类id查询菜品
+        /// </summary>
+        /// <param name="categoryId"></param>
+        /// <returns></returns>
+        Task<List<Dish>> ListAsync(long categoryId);
     }
 }

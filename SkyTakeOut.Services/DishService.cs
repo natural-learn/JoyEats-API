@@ -216,5 +216,20 @@ namespace SkyTakeOut.Services
             }
             await _unitOfWork.SaveChangesAsync();
         }
+
+        /// <summary>
+        /// 根据分类id查询菜品
+        /// </summary>
+        /// <param name="categoryId"></param>
+        /// <returns></returns>
+        public async Task<List<Dish>> ListAsync(long categoryId)
+        { 
+            if (categoryId <= 0)
+            {
+                throw new ArgumentException("分类Id必须为正整数");
+            }
+
+            return await _dishRepository.GetListAsync(d => d.CategoryId == categoryId && d.Status == StatusConstant.ENABLE);
+        }
     }
 }

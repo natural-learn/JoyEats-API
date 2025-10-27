@@ -3,6 +3,7 @@ using SkyTakeOut.Common;
 using SkyTakeOut.Core.DTO.Dish;
 using SkyTakeOut.Core.VO.Dish;
 using SkyTakeOut.IServices;
+using SkyTakeOut.Models;
 
 namespace SkyTakeOut.Admin.Controllers
 {
@@ -114,6 +115,17 @@ namespace SkyTakeOut.Admin.Controllers
             return ApiResultHelper.Success();
         }
 
-
+        /// <summary>
+        /// 根据分类id查询菜品
+        /// </summary>
+        /// <param name="categoryId"></param>
+        /// <returns></returns>
+        [HttpGet("list")]
+        public async Task<ActionResult<ApiResult<List<Dish>>>> List(long categoryId)
+        {
+            _logger.LogInformation("根据分类id：{@long}查询菜品", categoryId);
+            List<Dish> dishList = await _dishService.ListAsync(categoryId);
+            return ApiResultHelper.Success(dishList);
+        }
     }
 }
