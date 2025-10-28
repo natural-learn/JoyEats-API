@@ -23,6 +23,11 @@ namespace SkyTakeOut.EntityFrameworkCore.Configs
                    .WithOne(d => d.Category)
                    .IsRequired()
                    .OnDelete(DeleteBehavior.NoAction);
+
+            builder.HasMany(c => c.Setmeals)
+                   .WithOne(s => s.Category)
+                   .IsRequired()
+                   .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

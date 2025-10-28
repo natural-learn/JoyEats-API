@@ -59,6 +59,9 @@ namespace SkyTakeOut.Services
         public async Task<PagedResult<DishVo>> PageQueryAsync(DishPageQueryDTO dishPageQueryDTO)
         {
             var dishVoList = await _dishRepository.GetQueryable()
+                .OrderByDescending(d => d.CreateTime)
+                .Skip((dishPageQueryDTO.Page - 1) * dishPageQueryDTO.PageSize)
+                .Take(dishPageQueryDTO.PageSize)
                 .Select(d => new DishVo
                 {
                     Id = d.Id,
@@ -72,8 +75,8 @@ namespace SkyTakeOut.Services
                     UpdateTime = d.UpdateTime
                 })
                 .ToListAsync();
-
-            return PagedResult<DishVo>.GetPagedResult(dishVoList, dishPageQueryDTO.Page, dishPageQueryDTO.PageSize, dishVoList.Count);
+            var total = await _dishRepository.GetQueryable().CountAsync();
+            return PagedResult<DishVo>.GetPagedResult(dishVoList, dishPageQueryDTO.Page, dishPageQueryDTO.PageSize, total);
         }
 
         /// <summary>

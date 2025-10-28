@@ -1,24 +1,15 @@
-﻿namespace SkyTakeOut.Models
+﻿using SkyTakeOut.Models;
+
+namespace SkyTakeOut.Core.VO.Setmeal
 {
-    /// <summary>
-    /// 套餐
-    /// </summary>
-    public class Setmeal : BaseEntity
+    public class SetmealVo
     {
-        /// <summary>
-        /// 主键
-        /// </summary>           
         public long Id { get; set; }
 
         /// <summary>
-        /// 菜品分类id
+        /// 分类id
         /// </summary>
         public long CategoryId { get; set; }
-
-        /// <summary>
-        /// 导航属性：一个套餐属于一个分类
-        /// </summary>
-        public Category Category { get; set; }
 
         /// <summary>
         /// 套餐名称
@@ -31,9 +22,9 @@
         public decimal Price { get; set; }
 
         /// <summary>
-        /// 售卖状态 0:停售 1:起售
+        /// 状态 0:停用 1:启用
         /// </summary>
-        public int? Status { get; set; }
+        public int Status { get; set; }
 
         /// <summary>
         /// 描述信息
@@ -44,5 +35,20 @@
         /// 图片
         /// </summary>
         public string Image { get; set; }
+
+        /// <summary>
+        /// 更新时间
+        /// </summary>
+        public DateTime UpdateTime { get; set; }
+
+        /// <summary>
+        /// 分类名称
+        /// </summary>
+        public string CategoryName { get; set; }
+
+        /// <summary>
+        /// 套餐和菜品的关联关系
+        /// </summary>
+        public List<SetmealDish> SetmealDishes { get; set; } = new List<SetmealDish>();
     }
 }

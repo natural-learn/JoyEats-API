@@ -34,5 +34,10 @@
         /// 导航属性，一个分类下有多个菜品
         /// </summary>
         public ICollection<Dish> Dishes { get; set; } = new List<Dish>();
+
+        /// <summary>
+        /// 导航属性：一个分类下有多个套餐
+        /// </summary>
+        public ICollection<Setmeal> Setmeals { get; set; } = new List<Setmeal>();
     }
 }
