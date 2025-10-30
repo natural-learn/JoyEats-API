@@ -15,10 +15,14 @@
         /// </summary>
         public long? SetmealId { get; set; }
 
+        public Setmeal Setmeal { get; set; }
+
         /// <summary>
         /// 菜品id
         /// </summary>
         public long? DishId { get; set; }
+
+        public Dish Dish { get; set; }
 
         /// <summary>
         /// 菜品名称 （冗余字段）

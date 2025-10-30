@@ -45,5 +45,18 @@ namespace SkyTakeOut.Admin.Controllers
             PagedResult<SetmealVo> pagedResult = await _setmealService.PageQueryAsync(setmealPageQueryDTO);
             return ApiResultHelper.Success(pagedResult);
         }
+
+        /// <summary>
+        /// 套餐启售停售
+        /// </summary>
+        /// <param name="status"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPost("status/{status}")]
+        public async Task<ActionResult<ApiResult>> StartOrStop(int status, long id)
+        {
+            await _setmealService.StartOrStopAsync(status, id);
+            return ApiResultHelper.Success();
+        }
     }
 }

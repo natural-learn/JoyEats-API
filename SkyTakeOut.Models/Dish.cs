@@ -44,5 +44,7 @@
         /// 0 停售 1 起售
         /// </summary>
         public int Status { get; set; }
+
+        public ICollection<SetmealDish> SetmealDishes { get; set; } = new List<SetmealDish>();
     }
 }

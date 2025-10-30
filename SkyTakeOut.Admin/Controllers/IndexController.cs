@@ -2,6 +2,7 @@
 using SkyTakeOut.Common;
 using SkyTakeOut.Common.Constant;
 using SkyTakeOut.Common.Helpers.Redis;
+using SkyTakeOut.IRepository;
 using SkyTakeOut.IRepository.UnitOfWork;
 using SkyTakeOut.Models;
 using System.Security.Claims;
@@ -16,12 +17,14 @@ namespace SkyTakeOut.Admin.Controllers
         private readonly ILogger<IndexController> _logger;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IDishRepository _dishRepository;
 
         public IndexController(ILogger<IndexController> logger, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor)
         {
             _logger = logger;
             _unitOfWork = unitOfWork;
             _httpContextAccessor = httpContextAccessor;
+            _dishRepository = unitOfWork.GetRepository<IDishRepository>();  // 获取到的对象是空的！！！
         }
 
         [HttpGet("hello")]
@@ -118,6 +121,15 @@ namespace SkyTakeOut.Admin.Controllers
             return Ok("菜品数据添加成功");
         }
 
-
+        [HttpGet("test")]
+        public async Task<IActionResult> Test()
+        {
+            if (_dishRepository != null)
+            {
+                Console.WriteLine("dishRepository不为空");
+            }
+            await _dishRepository.GetBySetmealIdAsync(1);
+            return Ok("请求成功");
+        }
     }
 }

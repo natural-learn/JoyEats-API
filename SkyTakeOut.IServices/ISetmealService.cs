@@ -20,5 +20,13 @@ namespace SkyTakeOut.IServices
         /// <param name="setmealPageQueryDTO"></param>
         /// <returns></returns>
         Task<PagedResult<SetmealVo>> PageQueryAsync(SetmealPageQueryDTO setmealPageQueryDTO);
+
+        /// <summary>
+        /// 套餐启售停售
+        /// </summary>
+        /// <param name="status"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task StartOrStopAsync(int status, long id);
     }
 }

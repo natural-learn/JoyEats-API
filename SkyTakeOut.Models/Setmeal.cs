@@ -44,5 +44,7 @@
         /// 图片
         /// </summary>
         public string Image { get; set; }
+
+        public ICollection<SetmealDish> SetmealDishes { get; set; } = new List<SetmealDish>();
     }
 }
