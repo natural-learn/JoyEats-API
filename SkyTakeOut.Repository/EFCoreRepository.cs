@@ -71,7 +71,7 @@ namespace SkyTakeOut.Repository
         /// </summary>
         /// <param name="entities"></param>
         /// <param name="cancellationToken"></param>
-        public void RemoveRangeAsync(IEnumerable<TEntity> entities)
+        public void RemoveRange(IEnumerable<TEntity> entities)
         {
             _dbSet.RemoveRange(entities);
         }

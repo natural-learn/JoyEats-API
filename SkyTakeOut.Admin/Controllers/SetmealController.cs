@@ -58,5 +58,39 @@ namespace SkyTakeOut.Admin.Controllers
             await _setmealService.StartOrStopAsync(status, id);
             return ApiResultHelper.Success();
         }
+
+        /// <summary>
+        /// 根据Id查询套餐信息
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("{id}")]
+        public async Task<ActionResult<ApiResult<SetmealVo>>> GetById(long id)
+        {
+            _logger.LogInformation("根据id查询套餐信息：{Id}", id);
+            SetmealVo setmealVo = await _setmealService.GetByIdWithDishAsync(id);
+            return ApiResultHelper.Success(setmealVo);
+        }
+
+        /// <summary>
+        /// 修改套餐
+        /// </summary>
+        /// <param name="setmealDTO"></param>
+        /// <returns></returns>
+        [HttpPut]
+        public async Task<ActionResult<ApiResult>> Update([FromBody] SetmealDTO setmealDTO)
+        {
+            _logger.LogInformation("修改套餐：{@SetmealDTO}", setmealDTO);
+            try
+            {
+                await _setmealService.UpdateSetmealAsync(setmealDTO);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "{@string}", ex.Message);
+                return ApiResultHelper.Error("修改套餐失败");
+            }
+            return ApiResultHelper.Success();
+        }
     }
 }

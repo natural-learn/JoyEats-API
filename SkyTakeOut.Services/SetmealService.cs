@@ -3,6 +3,7 @@ using SkyTakeOut.Common;
 using SkyTakeOut.Common.Constant;
 using SkyTakeOut.Core.DTO.Setmeal;
 using SkyTakeOut.Core.Exceptions;
+using SkyTakeOut.Core.VO.Dish;
 using SkyTakeOut.Core.VO.Setmeal;
 using SkyTakeOut.IRepository;
 using SkyTakeOut.IRepository.UnitOfWork;
@@ -105,6 +106,90 @@ namespace SkyTakeOut.Services
 
             setmeal.Status = status;
             await _unitOfWork.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// 根据id查询套餐
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<SetmealVo> GetByIdWithDishAsync(long id)
+        {
+            if (id <= 0)
+            {
+                throw new ArgumentException("套餐Id不合法");
+            }
+
+            Setmeal? setmeal = await _setmealRepository.GetByIdAsync(id) ??
+                throw new EntityNotFoundException($"未找到id为{id}的套餐");
+
+            List<SetmealDish> setmealDishes = await _setmealDishRepository.GetListAsync(sd => sd.SetmealId == id);
+            SetmealVo setmealVo = Mapper.Map<SetmealVo>(setmeal);
+            List<SetmealDishVo> setmealDishVos = new List<SetmealDishVo>();
+            foreach (SetmealDish setmealDish in setmealDishes)
+            {
+                setmealDishVos.Add(new SetmealDishVo
+                {
+                    Id = setmealDish.Id,
+                    DishId = setmealDish.DishId,
+                    Dish = Mapper.Map<DishVo>(setmealDish.Dish),
+                    Copies = setmealDish.Copies,
+                    Name = setmealDish.Name,
+                    Price = setmealDish.Price,
+                    SetmealId = setmealDish.SetmealId
+                });
+            }
+            setmealVo.SetmealDishes = setmealDishVos;
+            return setmealVo;
+        }
+
+        /// <summary>
+        /// 修改套餐
+        /// </summary>
+        /// <param name="setmealDTO"></param>
+        /// <returns></returns>
+        public async Task UpdateSetmealAsync(SetmealDTO setmealDTO)
+        {
+            if (setmealDTO == null || setmealDTO.Id <= 0)
+            {
+                throw new ArgumentException("无效的套餐信息");
+            }
+
+            await _unitOfWork.BeginTransactionAsync();
+            
+            try
+            {
+                // 查询套餐
+                Setmeal? setmeal = _setmealRepository.GetByIdAsync(setmealDTO.Id).Result ??
+                    throw new EntityNotFoundException($"未找到id为{setmealDTO.Id}的套餐");
+                
+                // 修改套餐
+                Mapper.Map(setmealDTO, setmeal);
+
+                // 删除套餐和菜品的关联数据
+                var existingDishes = await _setmealDishRepository.GetListAsync(sd => sd.SetmealId == setmealDTO.Id);
+                if (existingDishes.Count != 0)
+                {
+                    _setmealDishRepository.RemoveRange(existingDishes);
+                }
+
+                if (setmealDTO.SetmealDishes?.Count != 0)
+                {
+                    var newDishs = setmealDTO.SetmealDishes.Select(sd =>
+                    {
+                        sd.SetmealId = setmealDTO.Id;
+                        return sd;
+                    }).ToList();
+                    await _setmealDishRepository.AddRangeAsync(newDishs);
+                }
+                await _unitOfWork.CommitTransactionAsync();
+                await _unitOfWork.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                await _unitOfWork.RollbackTransactionAsync();
+                throw new BusinessException($"更新套餐失败，套餐Id：{setmealDTO.Id}");
+            }
         }
     }
 }

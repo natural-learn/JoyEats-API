@@ -4,6 +4,7 @@ using SkyTakeOut.Core.DTO.Dish;
 using SkyTakeOut.Core.DTO.Employee;
 using SkyTakeOut.Core.DTO.Setmeal;
 using SkyTakeOut.Core.VO.Dish;
+using SkyTakeOut.Core.VO.Setmeal;
 using SkyTakeOut.Models;
 
 namespace SkyTakeOut.Core.Automapper
@@ -41,6 +42,8 @@ namespace SkyTakeOut.Core.Automapper
                 {
                     opt.Condition((src, dest, srcMember) => srcMember != null);
                 });
+
+            CreateMap<Setmeal, SetmealVo>().ForMember(dest => dest.SetmealDishes, opt => opt.Ignore());
         }
     }
 }

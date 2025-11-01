@@ -55,7 +55,7 @@ namespace SkyTakeOut.IRepository
         /// <param name="entities"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        void RemoveRangeAsync(IEnumerable<TEntity> entities);
+        void RemoveRange(IEnumerable<TEntity> entities);
         #endregion
 
         #region 更新

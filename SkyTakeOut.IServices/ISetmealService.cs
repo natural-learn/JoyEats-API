@@ -28,5 +28,19 @@ namespace SkyTakeOut.IServices
         /// <param name="id"></param>
         /// <returns></returns>
         Task StartOrStopAsync(int status, long id);
+
+        /// <summary>
+        /// 根据id查询套餐
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<SetmealVo> GetByIdWithDishAsync(long id);
+
+        /// <summary>
+        /// 修改套餐
+        /// </summary>
+        /// <param name="setmealDTO"></param>
+        /// <returns></returns>
+        Task UpdateSetmealAsync(SetmealDTO setmealDTO);
     }
 }

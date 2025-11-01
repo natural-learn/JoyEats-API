@@ -49,6 +49,6 @@ namespace SkyTakeOut.Core.VO.Setmeal
         /// <summary>
         /// 套餐和菜品的关联关系
         /// </summary>
-        public List<SetmealDish> SetmealDishes { get; set; } = new List<SetmealDish>();
+        public List<SetmealDishVo> SetmealDishes { get; set; } = new List<SetmealDishVo>();
     }
 }
