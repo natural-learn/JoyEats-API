@@ -42,5 +42,12 @@ namespace SkyTakeOut.IServices
         /// <param name="setmealDTO"></param>
         /// <returns></returns>
         Task UpdateSetmealAsync(SetmealDTO setmealDTO);
+
+        /// <summary>
+        /// 批量删除套餐
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        Task DeleteBatchAsync(List<long> ids);
     }
 }

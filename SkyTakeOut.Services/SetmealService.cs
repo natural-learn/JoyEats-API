@@ -93,7 +93,7 @@ namespace SkyTakeOut.Services
                 {
                     foreach (Dish dish in dishList)
                     {
-                        if (dish.Status ==  StatusConstant.DISABLE)
+                        if (dish.Status == StatusConstant.DISABLE)
                         {
                             throw new SetmealEnableFailedException(MessageConstant.SETMEAL_ENABLE_FAILED);
                         }
@@ -101,7 +101,7 @@ namespace SkyTakeOut.Services
                 }
             }
 
-            Setmeal? setmeal = await _setmealRepository.GetByIdAsync(id) ?? 
+            Setmeal? setmeal = await _setmealRepository.GetByIdAsync(id) ??
                 throw new EntityNotFoundException($"未找到id为{id}的套餐");
 
             setmeal.Status = status;
@@ -156,13 +156,13 @@ namespace SkyTakeOut.Services
             }
 
             await _unitOfWork.BeginTransactionAsync();
-            
+
             try
             {
                 // 查询套餐
                 Setmeal? setmeal = _setmealRepository.GetByIdAsync(setmealDTO.Id).Result ??
                     throw new EntityNotFoundException($"未找到id为{setmealDTO.Id}的套餐");
-                
+
                 // 修改套餐
                 Mapper.Map(setmealDTO, setmeal);
 
@@ -189,6 +189,49 @@ namespace SkyTakeOut.Services
             {
                 await _unitOfWork.RollbackTransactionAsync();
                 throw new BusinessException($"更新套餐失败，套餐Id：{setmealDTO.Id}");
+            }
+        }
+
+        /// <summary>
+        /// 批量删除套餐
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        public async Task DeleteBatchAsync(List<long> ids)
+        {
+            if (ids == null || ids.Count == 0)
+            {
+                throw new ArgumentNullException("参数无效");
+            }
+            var validIds = ids.Where(id => id > 0).ToList();
+            if (validIds.Count == 0)
+            {
+                throw new ArgumentException("参数无效");
+            }
+
+            await _unitOfWork.BeginTransactionAsync();
+            try
+            {
+                // 删除关联的套餐菜品
+                await _setmealDishRepository
+                    .GetQueryable()
+                    .Where(sd => validIds.Contains(sd.SetmealId.Value))
+                    .ExecuteDeleteAsync();
+
+                // 删除套餐数据
+                await _setmealRepository
+                    .GetQueryable()
+                    .Where(s => validIds.Contains(s.Id))
+                    .ExecuteDeleteAsync();
+
+                // 提交事务
+                await _unitOfWork.CommitTransactionAsync();
+            }
+            catch (Exception ex)
+            {
+                // 回滚事务（所有操作取消）
+                await _unitOfWork.RollbackTransactionAsync();
+                throw new InvalidOperationException($"删除失败：{ex.Message}");
             }
         }
     }

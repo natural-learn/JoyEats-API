@@ -87,8 +87,29 @@ namespace SkyTakeOut.Admin.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "{@string}", ex.Message);
+                _logger.LogError("{@string}", ex.Message);
                 return ApiResultHelper.Error("修改套餐失败");
+            }
+            return ApiResultHelper.Success();
+        }
+
+        /// <summary>
+        /// 批量删除套餐
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        [HttpDelete]
+        public async Task<ActionResult<ApiResult>> Delete([FromQuery] List<long> ids)
+        {
+            _logger.LogInformation("删除套餐：{@List<long>}", ids);
+            try
+            {
+                await _setmealService.DeleteBatchAsync(ids);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{@string}", ex.Message);
+                return ApiResultHelper.Error(ex.Message);
             }
             return ApiResultHelper.Success();
         }
