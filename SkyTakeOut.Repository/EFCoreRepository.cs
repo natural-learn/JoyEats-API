@@ -99,6 +99,17 @@ namespace SkyTakeOut.Repository
         }
 
         /// <summary>
+        /// 根据条件返回符合条件的数据，如果有多条符合条件的数据，则会抛出异常
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public async Task<TEntity?> SingleOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
+        {
+            return await _dbSet.SingleOrDefaultAsync(predicate, cancellationToken);
+        }
+
+        /// <summary>
         /// 根据主键查询数据
         /// </summary>
         /// <typeparam name="TKey"></typeparam>

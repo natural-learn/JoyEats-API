@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkyTakeOut.IServices", "Sky
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkyTakeOut.Services", "SkyTakeOut.Services\SkyTakeOut.Services.csproj", "{F895A1F9-7B1D-4AEA-912A-13E615D0AE62}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkyTakeOut.User", "SkyTakeOut.User\SkyTakeOut.User.csproj", "{7FA8202A-7969-4AAC-B6F3-A3846883B6E0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{F895A1F9-7B1D-4AEA-912A-13E615D0AE62}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F895A1F9-7B1D-4AEA-912A-13E615D0AE62}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F895A1F9-7B1D-4AEA-912A-13E615D0AE62}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7FA8202A-7969-4AAC-B6F3-A3846883B6E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7FA8202A-7969-4AAC-B6F3-A3846883B6E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7FA8202A-7969-4AAC-B6F3-A3846883B6E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7FA8202A-7969-4AAC-B6F3-A3846883B6E0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

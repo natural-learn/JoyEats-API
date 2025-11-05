@@ -87,6 +87,14 @@ namespace SkyTakeOut.IRepository
         Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
 
         /// <summary>
+        /// 根据条件返回符合条件的数据，如果有多条符合条件的数据，则会抛出异常
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task<TEntity?> SingleOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
+
+        /// <summary>
         /// 返回所有数据
         /// </summary>
         /// <param name="cancellationToken"></param>
