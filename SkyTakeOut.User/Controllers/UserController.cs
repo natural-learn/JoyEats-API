@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using SkyTakeOut.Common;
+using SkyTakeOut.Common.Configs;
 using SkyTakeOut.Common.Helpers;
 using SkyTakeOut.Core.DTO.User;
 using SkyTakeOut.Core.VO.User;
+using SkyTakeOut.IRepository.UnitOfWork;
 using SkyTakeOut.IServices;
-using SkyTakeOut.Models;
 
 namespace SkyTakeOut.User.Controllers
 {
@@ -14,13 +16,13 @@ namespace SkyTakeOut.User.Controllers
     {
         private readonly ILogger<UserController> _logger;
         private readonly IUserService _userService;
-        private readonly JWTHelper _jWTHelper;
+        private readonly JwtUserSettings _jwtUserSettings;
 
-        public UserController(ILogger<UserController> logger, IUserService userService, JWTHelper jWTHelper)
+        public UserController(ILogger<UserController> logger, IUserService userService, IOptions<JwtUserSettings> options)
         {
             _logger = logger;
             _userService = userService;
-            _jWTHelper = jWTHelper;
+            _jwtUserSettings = options.Value;
         }
 
         [HttpPost("login")]
@@ -44,7 +46,15 @@ namespace SkyTakeOut.User.Controllers
                 return ApiResultHelper.Error<UserLoginVo>("登录失败");
             }
 
-            string token = _jWTHelper.CreateToken(user.Id.ToString(), user.Name, "user");
+            string token = JWTHelper.CreateToken(
+                user.Id.ToString(), 
+                user.Name, 
+                "user",
+                _jwtUserSettings.Secret,
+                _jwtUserSettings.Issuer,
+                _jwtUserSettings.Audience,
+                _jwtUserSettings.ExpireMinutes);
+
             UserLoginVo userLoginVo = new UserLoginVo
             {
                 Id = user.Id,
@@ -54,5 +64,6 @@ namespace SkyTakeOut.User.Controllers
 
             return ApiResultHelper.Success(userLoginVo);
         }
+
     }
 }

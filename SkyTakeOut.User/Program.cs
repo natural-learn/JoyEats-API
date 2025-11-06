@@ -57,7 +57,6 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     string connectionString = builder.Configuration.GetConnectionString("MySqlDbConnection") ?? throw new
         InvalidOperationException("数据库连接字符串获取失败！");
     options.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 31)))
-           .AddInterceptors(new AuditInterceptor())
            .LogTo(Console.WriteLine, LogLevel.Information)
            .EnableSensitiveDataLogging();
 });

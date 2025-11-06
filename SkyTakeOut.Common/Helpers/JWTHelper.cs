@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using SkyTakeOut.Common.Configs;
+﻿using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -9,16 +7,27 @@ namespace SkyTakeOut.Common.Helpers
 {
     public class JWTHelper
     {
-        private readonly JwtAdminSettings _jwtAdminSettings;
-
-        public JWTHelper(IOptions<JwtAdminSettings> options)
+        /// <summary>
+        /// 创建JWT Token
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="userName"></param>
+        /// <param name="role"></param>
+        /// <param name="secretKey">密钥</param>
+        /// <param name="issuer">颁发者</param>
+        /// <param name="audience">接收者</param>
+        /// <param name="expireMinutes">过期时间（分钟）</param>
+        /// <returns></returns>
+        public static string CreateToken(
+            string id, 
+            string userName, 
+            string role,
+            string secretKey,
+            string issuer,
+            string audience,
+            int expireMinutes)
         {
-            _jwtAdminSettings = options.Value;
-        }
-
-        public string CreateToken(string id, string userName, string role)
-        {
-            byte[] secKeyBytes = Encoding.UTF8.GetBytes(_jwtAdminSettings.Secret);
+            byte[] secKeyBytes = Encoding.UTF8.GetBytes(secretKey);
             var secKey = new SymmetricSecurityKey(secKeyBytes);
             var credentials = new SigningCredentials(secKey, SecurityAlgorithms.HmacSha256Signature);
             var claims = new[]
@@ -28,10 +37,10 @@ namespace SkyTakeOut.Common.Helpers
                 new Claim(ClaimTypes.Role, role),
             };
             var tokenDescriptor = new JwtSecurityToken(
-                _jwtAdminSettings.Issuer,
+                issuer,
                 claims: claims,
-                audience: _jwtAdminSettings.Audience,
-                expires: DateTime.UtcNow.AddMinutes(_jwtAdminSettings.ExpireMinutes),
+                audience: audience,
+                expires: DateTime.UtcNow.AddMinutes(expireMinutes),
                 signingCredentials: credentials
             );
             return new JwtSecurityTokenHandler().WriteToken(tokenDescriptor);

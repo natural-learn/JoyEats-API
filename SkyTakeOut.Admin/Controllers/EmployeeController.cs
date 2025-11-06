@@ -50,11 +50,25 @@ namespace SkyTakeOut.Admin.Controllers
             string token = null;
             if (employee.Id == 1)
             {
-                token = _jWTHelper.CreateToken(employee.Id.ToString(), employee.Username, "admin");
+                token = JWTHelper.CreateToken(
+                    employee.Id.ToString(), 
+                    employee.Username, 
+                    "admin",
+                    _jwtAdminSettings.Secret,
+                    _jwtAdminSettings.Issuer,
+                    _jwtAdminSettings.Audience,
+                    _jwtAdminSettings.ExpireMinutes);
             }
             else
             {
-                token = _jWTHelper.CreateToken(employee.Id.ToString(), employee.Username, "user");
+                token = JWTHelper.CreateToken(
+                    employee.Id.ToString(), 
+                    employee.Username, 
+                    "user",
+                    _jwtAdminSettings.Secret,
+                    _jwtAdminSettings.Issuer,
+                    _jwtAdminSettings.Audience,
+                    _jwtAdminSettings.ExpireMinutes);
             }
             EmployeeLoginVo employeeLoginVo = new EmployeeLoginVo
             {

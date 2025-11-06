@@ -77,7 +77,6 @@ builder.Services.AddControllers()
 // JWT
 builder.Services.Configure<JwtAdminSettings>(builder.Configuration.GetSection("Jwt"));
 var jwtSettings = builder.Configuration.GetSection("Jwt").Get<JwtAdminSettings>();
-builder.Services.AddScoped<JWTHelper>();
 
 builder.Services.AddAuthentication(options =>
 {
