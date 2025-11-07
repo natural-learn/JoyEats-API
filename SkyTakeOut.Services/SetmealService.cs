@@ -9,6 +9,7 @@ using SkyTakeOut.IRepository;
 using SkyTakeOut.IRepository.UnitOfWork;
 using SkyTakeOut.IServices;
 using SkyTakeOut.Models;
+using System.Linq.Expressions;
 
 namespace SkyTakeOut.Services
 {
@@ -233,6 +234,50 @@ namespace SkyTakeOut.Services
                 await _unitOfWork.RollbackTransactionAsync();
                 throw new InvalidOperationException($"删除失败：{ex.Message}");
             }
+        }
+
+        /// <summary>
+        /// 条件查询
+        /// </summary>
+        /// <param name="setmealDTO"></param>
+        /// <returns></returns>
+        public async Task<List<Setmeal>> ListAsync(SetmealDTO setmealDTO)
+        {
+            Expression<Func<Setmeal, bool>> predicate = s => true;
+            if (!string.IsNullOrWhiteSpace(setmealDTO.Name))
+            {
+                predicate.And(s => s.Name.Contains(setmealDTO.Name));
+            }
+            if (setmealDTO.CategoryId.HasValue)
+            {
+                predicate.And(s => s.CategoryId == setmealDTO.CategoryId.Value);
+            }
+            if (setmealDTO.Status.HasValue)
+            {
+                predicate.And(s => s.Status == setmealDTO.Status.Value);
+            }
+            return await _setmealRepository.GetListAsync(predicate);
+        }
+
+        /// <summary>
+        /// 根据id查询菜品选项
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<List<DishItemVo>> GetDishItemByIdAsync(long id)
+        {
+            return await _setmealDishRepository
+                .GetQueryable()
+                .Where(sd => sd.SetmealId == id)
+                .Include(sd => sd.Dish)
+                .Select(sd => new DishItemVo
+                {
+                    Name = sd.Name,
+                    Copies = sd.Copies,
+                    Image = sd.Dish.Image,
+                    Description = sd.Dish.Description,
+                })
+                .ToListAsync();
         }
     }
 }

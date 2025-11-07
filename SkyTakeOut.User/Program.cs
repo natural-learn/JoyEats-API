@@ -131,6 +131,8 @@ var app = builder.Build();
 // 全局异常处理中间件
 app.UseMiddleware<GlobalExceptionMiddleware>();
 
+app.UseMiddleware<RequestLoggingMiddleware>();
+
 app.UseCors();
 
 app.UseAuthentication();

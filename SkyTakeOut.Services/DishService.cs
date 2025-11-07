@@ -8,6 +8,7 @@ using SkyTakeOut.IRepository;
 using SkyTakeOut.IRepository.UnitOfWork;
 using SkyTakeOut.IServices;
 using SkyTakeOut.Models;
+using System.Linq.Expressions;
 
 namespace SkyTakeOut.Services
 {
@@ -233,6 +234,49 @@ namespace SkyTakeOut.Services
             }
 
             return await _dishRepository.GetListAsync(d => d.CategoryId == categoryId && d.Status == StatusConstant.ENABLE);
+        }
+
+        /// <summary>
+        /// 条件查询菜品和口味
+        /// </summary>
+        /// <param name="dish"></param>
+        /// <returns></returns>
+        public async Task<List<DishVo>> ListWithFlavorAsync(Dish dish)
+        {
+            Expression<Func<Dish, bool>> predicate = d => true;
+            if (!string.IsNullOrWhiteSpace(dish.Name))
+            {
+                predicate = predicate.And(d => d.Name.Contains(dish.Name));
+            }
+
+            if (dish.CategoryId > 0)
+            {
+                predicate = predicate.And(d => d.CategoryId == dish.CategoryId);
+            }
+
+            if (dish.Status == StatusConstant.ENABLE)
+            {
+                predicate = predicate.And(d => d.Status == dish.Status);
+            }
+
+            var query = from d in _dishRepository.GetQueryable().Where(predicate)
+                        join df in _dishFlavorRepository.GetQueryable() on d.Id equals df.DishId into flavors
+                        orderby d.CreateTime descending
+                        select new DishVo
+                        {
+                            Id = d.Id,
+                            Name = d.Name,
+                            CategoryId = d.CategoryId,
+                            Status = d.Status,
+                            CategoryName = d.Category.Name,
+                            Description = d.Description,
+                            Flavors = flavors.ToList(),
+                            Image = d.Image,
+                            Price = d.Price,
+                            UpdateTime = d.UpdateTime, 
+                        };
+
+            return await query.ToListAsync();
         }
     }
 }

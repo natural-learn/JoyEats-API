@@ -1,7 +1,9 @@
 ﻿using SkyTakeOut.Common;
 using SkyTakeOut.Core.Autofac.DependencyInjection;
 using SkyTakeOut.Core.DTO.Setmeal;
+using SkyTakeOut.Core.VO.Dish;
 using SkyTakeOut.Core.VO.Setmeal;
+using SkyTakeOut.Models;
 
 namespace SkyTakeOut.IServices
 {
@@ -49,5 +51,19 @@ namespace SkyTakeOut.IServices
         /// <param name="ids"></param>
         /// <returns></returns>
         Task DeleteBatchAsync(List<long> ids);
+
+        /// <summary>
+        /// 条件查询
+        /// </summary>
+        /// <param name="setmealDTO"></param>
+        /// <returns></returns>
+        Task<List<Setmeal>> ListAsync(SetmealDTO setmealDTO);
+
+        /// <summary>
+        /// 根据id查询菜品选项
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<List<DishItemVo>> GetDishItemByIdAsync(long id);
     }
 }

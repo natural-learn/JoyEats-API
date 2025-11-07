@@ -5,11 +5,13 @@ using SkyTakeOut.Common.Configs;
 using SkyTakeOut.Common.Helpers;
 using SkyTakeOut.Core.DTO.User;
 using SkyTakeOut.Core.VO.User;
-using SkyTakeOut.IRepository.UnitOfWork;
 using SkyTakeOut.IServices;
 
 namespace SkyTakeOut.User.Controllers
 {
+    /// <summary>
+    /// C端用户相关接口
+    /// </summary>
     [Route("user/[controller]")]
     [ApiController]
     public class UserController : ControllerBase

@@ -57,5 +57,12 @@ namespace SkyTakeOut.IServices
         /// <param name="categoryId"></param>
         /// <returns></returns>
         Task<List<Dish>> ListAsync(long categoryId);
+
+        /// <summary>
+        /// 条件查询菜品和口味
+        /// </summary>
+        /// <param name="dish"></param>
+        /// <returns></returns>
+        Task<List<DishVo>> ListWithFlavorAsync(Dish dish);
     }
 }
