@@ -1,4 +1,7 @@
 ﻿using StackExchange.Redis;
+using System.Net.NetworkInformation;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace SkyTakeOut.Common.Helpers.Redis
 {
@@ -7,6 +10,7 @@ namespace SkyTakeOut.Common.Helpers.Redis
         private static readonly IDatabase _db;
         private static readonly Lazy<IConnectionMultiplexer> _lazyMultiplexer;
         private static readonly int _database;
+        private static readonly JsonSerializerOptions _jsonSerializerOptions;
 
         static StackExchangeRedisHelper()
         {
@@ -17,6 +21,11 @@ namespace SkyTakeOut.Common.Helpers.Redis
                 return ConnectionMultiplexer.Connect(defaultConnectionString);
             });
             _db = _lazyMultiplexer.Value.GetDatabase(_database);
+            _jsonSerializerOptions = new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                WriteIndented = false,
+            };
         }
 
         #region 字符串(String)操作
@@ -33,14 +42,30 @@ namespace SkyTakeOut.Common.Helpers.Redis
             return await _db.StringSetAsync(key, value, expiry);
         }
 
+        public static async Task<bool> SetAsync<T>(string key, T value, TimeSpan? expiry = null)
+        {
+            var json = JsonSerializer.Serialize(value, _jsonSerializerOptions);
+            return await _db.StringSetAsync(key, json, expiry);
+        }
+
         /// <summary>
         /// 获取指定键的值
         /// </summary>
         /// <param name="key">键</param>
         /// <returns>值</returns>
-        public static async Task<string> StringGetAsync(string key)
+        public static async Task<string?> StringGetAsync(string key)
         {
             return await _db.StringGetAsync(key);
+        }
+
+        public static async Task<T> GetAsync<T>(string key)
+        {
+            var value = await _db.StringGetAsync(key);
+            if (value.IsNull)
+            {
+                return default;
+            }
+            return JsonSerializer.Deserialize<T>(value, _jsonSerializerOptions);
         }
 
         /// <summary>
@@ -110,7 +135,7 @@ namespace SkyTakeOut.Common.Helpers.Redis
         /// <returns>字段值字典</returns>
         public static async Task<Dictionary<string, string>> HashGetAllAsync(string key)
         {
-            if(string.IsNullOrWhiteSpace(key))
+            if (string.IsNullOrWhiteSpace(key))
             {
                 throw new ArgumentNullException(nameof(key), "哈希键不能为null或空字符串");
             }
@@ -343,15 +368,38 @@ namespace SkyTakeOut.Common.Helpers.Redis
         /// </summary>
         /// <param name="pattern">匹配模式，如user:*</param>
         /// <returns>键列表</returns>
-        public static IEnumerable<string> Keys(string pattern)
+        public static async IAsyncEnumerable<string> KeysAsync(string pattern)
         {
             foreach (var endpoint in _lazyMultiplexer.Value.GetEndPoints())
             {
                 var server = _lazyMultiplexer.Value.GetServer(endpoint);
-                foreach (var key in server.Keys(pattern: pattern))
+                await foreach (var key in server.KeysAsync(pattern: pattern))
                 {
-                    yield return key;
+                    yield return key.ToString();
                 }
+            }
+        }
+
+        /// <summary>
+        /// 清理所有匹配的键
+        /// </summary>
+        /// <param name="pattern"></param>
+        /// <returns></returns>
+        public static async Task CleanCacheAsync(string pattern)
+        {
+            var keysBatch = new List<RedisKey>();
+            await foreach (var key in KeysAsync(pattern))
+            {
+                keysBatch.Add(key);
+                if(keysBatch.Count >= 100)
+                {
+                    await _db.KeyDeleteAsync(keysBatch.ToArray());
+                    keysBatch.Clear();
+                }
+            }
+            if (keysBatch.Count > 0)
+            {
+                await _db.KeyDeleteAsync(keysBatch.ToArray());
             }
         }
 

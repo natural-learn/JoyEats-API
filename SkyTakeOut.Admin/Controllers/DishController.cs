@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SkyTakeOut.Common;
+using SkyTakeOut.Common.Helpers.Redis;
 using SkyTakeOut.Core.DTO.Dish;
 using SkyTakeOut.Core.VO.Dish;
 using SkyTakeOut.IServices;
@@ -33,6 +34,9 @@ namespace SkyTakeOut.Admin.Controllers
         {
             _logger.LogInformation("新增菜品：{@DishDTO}", dishDTO);
             await _dishService.SaveWithFlavorAsync(dishDTO);
+            // 清理缓存数据
+            string key = "dish_" + dishDTO.CategoryId;
+            await StackExchangeRedisHelper.CleanCacheAsync(key);
 
             return ApiResultHelper.Success();
         }
@@ -73,6 +77,8 @@ namespace SkyTakeOut.Admin.Controllers
             }
 
             await _dishService.DeleteBatchAsync(idList);
+            // 将所有的菜品缓存数据清理掉，所有以dish_开头的key
+            await StackExchangeRedisHelper.CleanCacheAsync("dish_*");
             return ApiResultHelper.Success();
         }
 
@@ -86,6 +92,8 @@ namespace SkyTakeOut.Admin.Controllers
         public async Task<ActionResult<ApiResult>> StartOrStop(int status, long id)
         {
             await _dishService.StartOrStopAsync(status, id);
+            // 将所有的菜品缓存数据清理掉，所有以dish_开头的key
+            await StackExchangeRedisHelper.CleanCacheAsync("dish_*");
             return ApiResultHelper.Success();
         }
 
@@ -112,6 +120,8 @@ namespace SkyTakeOut.Admin.Controllers
         {
             _logger.LogInformation("修改菜品：{@DishDTO}", dishDTO);
             await _dishService.UpdateWithFlavorAsync(dishDTO);
+            // 将所有的菜品缓存数据清理掉，所有以dish_开头的key
+            await StackExchangeRedisHelper.CleanCacheAsync("dish_*");
             return ApiResultHelper.Success();
         }
 
