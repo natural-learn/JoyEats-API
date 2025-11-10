@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using SkyTakeOut.Core.DTO.AddressBook;
 using SkyTakeOut.Core.DTO.Category;
 using SkyTakeOut.Core.DTO.Dish;
 using SkyTakeOut.Core.DTO.Employee;
@@ -47,6 +48,8 @@ namespace SkyTakeOut.Core.Automapper
             CreateMap<Setmeal, SetmealVo>().ForMember(dest => dest.SetmealDishes, opt => opt.Ignore());
 
             CreateMap<ShoppingCart, ShoppingCartDTO>().ReverseMap();
+
+            CreateMap<AddressBookDTO, AddressBook>();
         }
     }
 }
