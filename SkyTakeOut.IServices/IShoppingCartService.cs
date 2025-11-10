@@ -18,5 +18,11 @@ namespace SkyTakeOut.IServices
         /// </summary>
         /// <returns></returns>
         Task<List<ShoppingCart>> ShowShoppingCartAsync();
+
+        /// <summary>
+        /// 清空购物车
+        /// </summary>
+        /// <returns></returns>
+        Task CleanShoppingCartAsync();
     }
 }

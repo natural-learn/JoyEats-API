@@ -1,4 +1,5 @@
-﻿using SkyTakeOut.Common;
+﻿using Microsoft.EntityFrameworkCore;
+using SkyTakeOut.Common;
 using SkyTakeOut.Common.Constant;
 using SkyTakeOut.Common.Helpers.Redis;
 using SkyTakeOut.Core.DTO.ShoppingCart;
@@ -92,6 +93,18 @@ namespace SkyTakeOut.Services
         public async Task<List<ShoppingCart>> ShowShoppingCartAsync()
         {
             return await _shoppingCartRepository.ListAsync(new ShoppingCart { UserId = userId });
+        }
+
+        /// <summary>
+        /// 清空购物车
+        /// </summary>
+        /// <returns></returns>
+        public async Task CleanShoppingCartAsync()
+        {
+            await _shoppingCartRepository
+                .GetQueryable()
+                .Where(sc => sc.UserId == userId)
+                .ExecuteDeleteAsync();
         }
     }
 }

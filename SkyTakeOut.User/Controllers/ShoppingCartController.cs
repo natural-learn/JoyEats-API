@@ -47,6 +47,16 @@ namespace SkyTakeOut.User.Controllers
             return ApiResultHelper.Success(shoppingCartList);
         }
 
-
+        /// <summary>
+        /// 清空购物车
+        /// </summary>
+        /// <returns></returns>
+        [HttpDelete("clean")]
+        public async Task<ActionResult<ApiResult>> Clean()
+        {
+            _logger.LogInformation("清空购物车");
+            await _shoppingCartService.CleanShoppingCartAsync();
+            return ApiResultHelper.Success();
+        }
     }
 }
