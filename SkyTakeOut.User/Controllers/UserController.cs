@@ -2,7 +2,9 @@
 using Microsoft.Extensions.Options;
 using SkyTakeOut.Common;
 using SkyTakeOut.Common.Configs;
+using SkyTakeOut.Common.Constant;
 using SkyTakeOut.Common.Helpers;
+using SkyTakeOut.Common.Helpers.Redis;
 using SkyTakeOut.Core.DTO.User;
 using SkyTakeOut.Core.VO.User;
 using SkyTakeOut.IServices;
@@ -56,6 +58,8 @@ namespace SkyTakeOut.User.Controllers
                 _jwtUserSettings.Issuer,
                 _jwtUserSettings.Audience,
                 _jwtUserSettings.ExpireMinutes);
+
+            await StackExchangeRedisHelper.StringSetAsync(RedisConstant.UserId, user.Id.ToString(), TimeSpan.FromMinutes(60));
 
             UserLoginVo userLoginVo = new UserLoginVo
             {

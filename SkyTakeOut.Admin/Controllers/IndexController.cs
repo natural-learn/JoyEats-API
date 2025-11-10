@@ -24,7 +24,7 @@ namespace SkyTakeOut.Admin.Controllers
             _logger = logger;
             _unitOfWork = unitOfWork;
             _httpContextAccessor = httpContextAccessor;
-            _dishRepository = unitOfWork.GetRepository<IDishRepository>();  // 获取到的对象是空的！！！
+            _dishRepository = unitOfWork.GetRepository<IDishRepository>();
         }
 
         [HttpGet("hello")]
