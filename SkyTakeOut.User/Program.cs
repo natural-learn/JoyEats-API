@@ -99,21 +99,6 @@ builder.Services.AddAuthentication(options =>
         ValidateLifetime = true,
         ClockSkew = TimeSpan.FromMinutes(5)
     };
-
-    options.Events = new JwtBearerEvents
-    {
-        OnMessageReceived = context =>
-        {
-            var token = context.Request.Headers.TryGetValue("Token", out var tokenValue)
-                ? tokenValue.FirstOrDefault()
-                : null;
-            if (!string.IsNullOrEmpty(token))
-            {
-                context.Token = token;
-            }
-            return Task.CompletedTask;
-        }
-    };
 });
 builder.Services.AddAuthorization();
 builder.Services.AddHttpContextAccessor();

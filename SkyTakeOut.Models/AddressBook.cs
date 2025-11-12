@@ -18,7 +18,7 @@
         /// <summary>
         /// 收货人
         /// </summary>
-        public string? Consignee { get; set; }
+        public string Consignee { get; set; }
 
         /// <summary>
         /// 性别
@@ -68,7 +68,7 @@
         /// <summary>
         /// 标签
         /// </summary>
-        public string Label { get; set; }
+        public int Label { get; set; }
 
         /// <summary>
         /// 默认 0 否 1是
