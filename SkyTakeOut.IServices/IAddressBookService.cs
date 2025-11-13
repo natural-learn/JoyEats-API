@@ -19,5 +19,12 @@ namespace SkyTakeOut.IServices
         /// <param name="addressBook"></param>
         /// <returns></returns>
         Task SaveAsync(AddressBookDTO addressBookDTO);
+
+        /// <summary>
+        /// 根据Id查询地址
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<AddressBook?> GetByIdAsync(long id);
     }
 }

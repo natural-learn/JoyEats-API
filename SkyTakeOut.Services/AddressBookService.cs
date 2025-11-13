@@ -52,5 +52,15 @@ namespace SkyTakeOut.Services
             await _addressBookRepository.AddAsync(addressBook);
             await _unitOfWork.SaveChangesAsync();
         }
+
+        /// <summary>
+        /// 根据Id查询地址
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<AddressBook?> GetByIdAsync(long id)
+        {
+            return await _addressBookRepository.GetByIdAsync(id);
+        }
     }
 }

@@ -48,5 +48,18 @@ namespace SkyTakeOut.User.Controllers
             await _addressBookService.SaveAsync(addressBookDTO);
             return ApiResultHelper.Success();
         }
+
+        /// <summary>
+        /// 根据Id查询地址
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("{id}")]
+        public async Task<ActionResult<ApiResult<AddressBook?>>> GetById(long id)
+        {
+            _logger.LogInformation("根据id:{@long} 查询地址", id);
+            AddressBook? addressBook = await _addressBookService.GetByIdAsync(id);
+            return ApiResultHelper.Success(addressBook);
+        }
     }
 }
