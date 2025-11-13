@@ -61,5 +61,17 @@ namespace SkyTakeOut.User.Controllers
             AddressBook? addressBook = await _addressBookService.GetByIdAsync(id);
             return ApiResultHelper.Success(addressBook);
         }
+
+        /// <summary>
+        /// 根据Id修改地址
+        /// </summary>
+        /// <param name="addressBook"></param>
+        /// <returns></returns>
+        [HttpPut]
+        public async Task<ActionResult<ApiResult>> Update([FromBody] AddressBookDTO addressBookDTO)
+        {
+            await _addressBookService.UpdateAsync(addressBookDTO);
+            return ApiResultHelper.Success();
+        }
     }
 }

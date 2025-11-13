@@ -2,6 +2,8 @@
 {
     public class AddressBookDTO
     {
+        public long Id { get; set; }
+
         /// <summary>
         /// 用户Id
         /// </summary>

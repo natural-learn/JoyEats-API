@@ -49,7 +49,8 @@ namespace SkyTakeOut.Core.Automapper
 
             CreateMap<ShoppingCart, ShoppingCartDTO>().ReverseMap();
 
-            CreateMap<AddressBookDTO, AddressBook>();
+            CreateMap<AddressBookDTO, AddressBook>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember)=> srcMember != null));
         }
     }
 }

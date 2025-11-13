@@ -2,6 +2,7 @@
 using SkyTakeOut.Common.Constant;
 using SkyTakeOut.Common.Helpers.Redis;
 using SkyTakeOut.Core.DTO.AddressBook;
+using SkyTakeOut.Core.Exceptions;
 using SkyTakeOut.EntityFrameworkCore.Extensions;
 using SkyTakeOut.IRepository;
 using SkyTakeOut.IRepository.UnitOfWork;
@@ -61,6 +62,21 @@ namespace SkyTakeOut.Services
         public async Task<AddressBook?> GetByIdAsync(long id)
         {
             return await _addressBookRepository.GetByIdAsync(id);
+        }
+
+
+        /// <summary>
+        /// 根据Id修改地址
+        /// </summary>
+        /// <param name="addressBookDTO"></param>
+        /// <returns></returns>
+        public async Task UpdateAsync(AddressBookDTO addressBookDTO)
+        {
+            var updateEntity = await _addressBookRepository.GetByIdAsync(addressBookDTO.Id) ??
+                throw new EntityNotFoundException($"未找到Id为{addressBookDTO.Id}的地址");
+            Mapper.Map(addressBookDTO, updateEntity);
+            _addressBookRepository.Update(updateEntity);
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 }
