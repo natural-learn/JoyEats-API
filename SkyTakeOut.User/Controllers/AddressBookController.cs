@@ -98,5 +98,24 @@ namespace SkyTakeOut.User.Controllers
             await _addressBookService.DeleteByIdAsync(id);
             return ApiResultHelper.Success();
         }
+
+        /// <summary>
+        /// 查询默认地址
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("default")]
+        public async Task<ActionResult<ApiResult<AddressBook>>> GetDefault()
+        {
+            AddressBook addressBook = new AddressBook()
+            {
+                IsDefault =1,
+            };
+            List<AddressBook> addressBookList = await _addressBookService.ListAsync(addressBook);
+            if (addressBookList != null && addressBookList.Count == 1)
+            {
+                return ApiResultHelper.Success(addressBookList[0]);
+            }
+            return ApiResultHelper.Error<AddressBook>("没有查询到默认地址");
+        }
     }
 }
