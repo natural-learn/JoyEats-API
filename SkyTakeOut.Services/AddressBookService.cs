@@ -102,5 +102,15 @@ namespace SkyTakeOut.Services
             _addressBookRepository.Update(addressBook);
             await _unitOfWork.SaveChangesAsync();
         }
+
+        /// <summary>
+        /// 根据Id删除地址
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task DeleteByIdAsync(long id)
+        {
+            await _addressBookRepository.RemoveByIdAsync(id);
+        }
     }
 }

@@ -40,5 +40,12 @@ namespace SkyTakeOut.IServices
         /// <param name="addressBook"></param>
         /// <returns></returns>
         Task SetDefaultAsync(AddressBook addressBook);
+
+        /// <summary>
+        /// 根据Id删除地址
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task DeleteByIdAsync(long id);
     }
 }

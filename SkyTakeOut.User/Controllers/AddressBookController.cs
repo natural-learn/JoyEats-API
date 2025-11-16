@@ -85,5 +85,18 @@ namespace SkyTakeOut.User.Controllers
             await _addressBookService.SetDefaultAsync(addressBook);
             return ApiResultHelper.Success();
         }
+
+        /// <summary>
+        /// 根据Id删除地址
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete]
+        public async Task<ActionResult<ApiResult>> DeleteById(long id)
+        {
+            _logger.LogInformation("删除指定Id:{@long}的地址", id);
+            await _addressBookService.DeleteByIdAsync(id);
+            return ApiResultHelper.Success();
+        }
     }
 }
