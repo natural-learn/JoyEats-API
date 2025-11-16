@@ -33,5 +33,12 @@ namespace SkyTakeOut.IServices
         /// <param name="addressBookDTO"></param>
         /// <returns></returns>
         Task UpdateAsync(AddressBookDTO addressBookDTO);
+
+        /// <summary>
+        /// 设置默认地址
+        /// </summary>
+        /// <param name="addressBook"></param>
+        /// <returns></returns>
+        Task SetDefaultAsync(AddressBook addressBook);
     }
 }

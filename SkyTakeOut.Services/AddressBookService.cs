@@ -78,5 +78,29 @@ namespace SkyTakeOut.Services
             _addressBookRepository.Update(updateEntity);
             await _unitOfWork.SaveChangesAsync();
         }
+
+        /// <summary>
+        /// 设置默认地址
+        /// </summary>
+        /// <param name="addressBook"></param>
+        /// <returns></returns>
+        public async Task SetDefaultAsync(AddressBook addressBook)
+        {
+            // 将当前用户的所有地址修改为非默认地址
+            var userAddressList = await _addressBookRepository
+                .GetListAsync(a => a.UserId == userId);
+
+            foreach (var userAddress in userAddressList)
+            {
+                addressBook.IsDefault = 0;
+                _addressBookRepository.Update(userAddress);
+            }
+
+            // 将当前地址改为默认地址
+            addressBook.IsDefault = 1;
+            addressBook.UserId = userId;
+            _addressBookRepository.Update(addressBook);
+            await _unitOfWork.SaveChangesAsync();
+        }
     }
 }

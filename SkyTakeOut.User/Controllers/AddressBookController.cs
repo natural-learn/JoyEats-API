@@ -73,5 +73,17 @@ namespace SkyTakeOut.User.Controllers
             await _addressBookService.UpdateAsync(addressBookDTO);
             return ApiResultHelper.Success();
         }
+
+        /// <summary>
+        /// 设置默认地址
+        /// </summary>
+        /// <param name="addressBook"></param>
+        /// <returns></returns>
+        [HttpPut("default")]
+        public async Task<ActionResult<ApiResult>> SetDefault([FromBody]AddressBook addressBook)
+        {
+            await _addressBookService.SetDefaultAsync(addressBook);
+            return ApiResultHelper.Success();
+        }
     }
 }
