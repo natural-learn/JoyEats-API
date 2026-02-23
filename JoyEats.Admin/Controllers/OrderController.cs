@@ -1,0 +1,38 @@
+﻿using JoyEats.Common;
+using JoyEats.Core.DTO.Order;
+using JoyEats.Core.VO.Order;
+using JoyEats.IServices;
+using Microsoft.AspNetCore.Mvc;
+
+namespace JoyEats.Admin.Controllers
+{
+    /// <summary>
+    /// 订单管理接口
+    /// </summary>
+    [Route("admin/[controller]")]
+    [ApiController]
+    public class OrderController : ControllerBase
+    {
+        private readonly ILogger<OrderController> _logger;
+        private readonly IOrderService _orderService;
+
+        public OrderController(ILogger<OrderController> logger, IOrderService orderService)
+        {
+            _logger = logger;
+            _orderService = orderService;
+        }
+
+        /// <summary>
+        /// 订单搜索
+        /// </summary>
+        /// <param name="ordersPageQueryDTO"></param>
+        /// <returns></returns>
+        [HttpGet("conditionSearch")]
+        public async Task<ActionResult<ApiResult<PagedResult<OrderVO>>>> ConditionSearch([FromQuery]OrdersPageQueryDTO ordersPageQueryDTO)
+        {
+            PagedResult<OrderVO> pagedResult = await _orderService.ConditionSearchAsync(ordersPageQueryDTO);
+            return ApiResultHelper.Success(pagedResult);
+        }
+
+    }
+}

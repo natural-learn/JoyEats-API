@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\JoyEats.Core\JoyEats.Core.csproj" />
+    <ProjectReference Include="..\JoyEats.EntityFrameworkCore\JoyEats.EntityFrameworkCore.csproj" />
+    <ProjectReference Include="..\JoyEats.Core\JoyEats.Core.csproj" />
+    <ProjectReference Include="..\JoyEats.EntityFrameworkCore\JoyEats.EntityFrameworkCore.csproj" />
+  </ItemGroup>
+
+</Project>
