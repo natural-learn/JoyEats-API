@@ -56,5 +56,17 @@ namespace JoyEats.Admin.Controllers
             OrderVO orderDto = await _orderService.DetailsAsync(id);
             return ApiResultHelper.Success(orderDto);
         }
+
+        /// <summary>
+        /// 接单
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPut("confirm")]
+        public async Task<ActionResult<ApiResult>> Confirm([FromBody] OrdersConfirmDTO ordersConfirmDTO)
+        {
+            await _orderService.ConfirmAsync(ordersConfirmDTO);
+            return ApiResultHelper.Success();
+        }
     }
 }

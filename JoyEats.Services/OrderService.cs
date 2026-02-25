@@ -265,5 +265,23 @@ namespace JoyEats.Services
             orderStatisticsDto.DeliveryInProgress = deliveryInProgress;
             return orderStatisticsDto;
         }
+
+        /// <summary>
+        /// 接单
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public async Task ConfirmAsync(OrdersConfirmDTO ordersConfirmDTO)
+        {
+            Orders orders = new Orders
+            {
+                Id = ordersConfirmDTO.Id,
+                Status = OrderStatus.CONFIRMED,
+            };
+            _orderRepository.Update(orders);
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+
     }
 }

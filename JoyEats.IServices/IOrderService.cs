@@ -63,5 +63,12 @@ namespace JoyEats.IServices
         /// </summary>
         /// <returns></returns>
         Task<OrderStatisticsVo> StatisticsAsync();
+
+        /// <summary>
+        /// 接单
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        Task ConfirmAsync(OrdersConfirmDTO ordersConfirmDTO);
     }
 }
