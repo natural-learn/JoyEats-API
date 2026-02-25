@@ -13,5 +13,12 @@ namespace JoyEats.IRepository
         /// <param name="ordersPageQueryDTO"></param>
         /// <returns></returns>
         Task<PagedResult<Orders>> PageQueryAsync(OrdersPageQueryDTO ordersPageQueryDTO);
+
+        /// <summary>
+        /// 根据动态条件统计营业额
+        /// </summary>
+        /// <param name="map"></param>
+        /// <returns></returns>
+        Task<decimal> SumByMapAsync(Dictionary<string, object> map);
     }
 }

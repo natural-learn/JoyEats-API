@@ -58,5 +58,33 @@ namespace SkyTakeOut.Repository
             var orderList = await query.Where(predicate).OrderByDescending(o => o.OrderTime).ToListAsync();
             return PagedResult<Orders>.GetPagedResult(orderList, ordersPageQueryDTO.Page, ordersPageQueryDTO.PageSize, orderList.Count);
         }
+
+        /// <summary>
+        /// 根据动态条件统计营业额
+        /// </summary>
+        /// <param name="map"></param>
+        /// <returns></returns>
+        public async Task<decimal> SumByMapAsync(Dictionary<string, object> map)
+        {
+            int? status = Convert.ToInt32(map["status"]);
+            DateTime? beginTime = Convert.ToDateTime(map["begin"]);
+            DateTime? endTime = Convert.ToDateTime(map["end"]);
+            Expression<Func<Orders, bool>> predicate = o => true;
+            if (status.HasValue)
+            {
+                predicate = predicate.And(o => o.Status == status);
+            }
+            if (beginTime.HasValue)
+            {
+                predicate = predicate.And(o => o.OrderTime >= beginTime);
+            }
+            if (endTime.HasValue)
+            {
+                predicate = predicate.And(o => o.OrderTime <= endTime);
+            }
+            return await GetQueryable()
+                .Where(predicate)
+                .SumAsync(o => o.Amount);
+        }
     }
 }
