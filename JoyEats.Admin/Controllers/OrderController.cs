@@ -44,5 +44,17 @@ namespace JoyEats.Admin.Controllers
             OrderStatisticsVo orderStatisticsDto = await _orderService.StatisticsAsync();
             return ApiResultHelper.Success(orderStatisticsDto);
         }
+
+        /// <summary>
+        /// 查询订单详情
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("details/{id}")]
+        public async Task<ActionResult<ApiResult<OrderVO>>> Details(long id)
+        {
+            OrderVO orderDto = await _orderService.DetailsAsync(id);
+            return ApiResultHelper.Success(orderDto);
+        }
     }
 }
