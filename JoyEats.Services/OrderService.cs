@@ -246,5 +246,24 @@ namespace JoyEats.Services
                 .ToList();
             return PagedResult<OrderVO>.GetPagedResult(orderVOList, ordersPageQueryDTO.Page, ordersPageQueryDTO.PageSize, pagedResult.Total);
         }
+
+        /// <summary>
+        /// 各个状态的订单数量统计
+        /// </summary>
+        /// <returns></returns>
+        public async Task<OrderStatisticsVo> StatisticsAsync()
+        {
+            // 根据状态，分别查询出待接单、待派送、派送中的订单数量
+            int toBeConfirmed = await _orderRepository.CountAsync(o => o.Status == OrderStatus.TO_BE_CONFIRMED);
+            int confirmed = await _orderRepository.CountAsync(o => o.Status == OrderStatus.CONFIRMED);
+            int deliveryInProgress = await _orderRepository.CountAsync(o => o.Status == OrderStatus.DELIVERY_IN_PROGRESS);
+
+            // 将查询出的数据封装到orderStatisticsVO中响应
+            OrderStatisticsVo orderStatisticsDto = new OrderStatisticsVo();
+            orderStatisticsDto.ToBeConfirmed = toBeConfirmed;
+            orderStatisticsDto.Confirmed = confirmed;
+            orderStatisticsDto.DeliveryInProgress = deliveryInProgress;
+            return orderStatisticsDto;
+        }
     }
 }

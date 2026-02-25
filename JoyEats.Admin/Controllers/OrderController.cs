@@ -34,5 +34,15 @@ namespace JoyEats.Admin.Controllers
             return ApiResultHelper.Success(pagedResult);
         }
 
+        /// <summary>
+        /// 各个状态的订单数量统计
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("statistics")]
+        public async Task<ActionResult<ApiResult<OrderStatisticsVo>>> Statistics()
+        {
+            OrderStatisticsVo orderStatisticsDto = await _orderService.StatisticsAsync();
+            return ApiResultHelper.Success(orderStatisticsDto);
+        }
     }
 }

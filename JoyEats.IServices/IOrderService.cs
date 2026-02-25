@@ -57,5 +57,11 @@ namespace JoyEats.IServices
         /// <param name="ordersPageQueryDTO"></param>
         /// <returns></returns>
         Task<PagedResult<OrderVO>> ConditionSearchAsync(OrdersPageQueryDTO ordersPageQueryDTO);
+
+        /// <summary>
+        /// 各个状态的订单数量统计
+        /// </summary>
+        /// <returns></returns>
+        Task<OrderStatisticsVo> StatisticsAsync();
     }
 }
