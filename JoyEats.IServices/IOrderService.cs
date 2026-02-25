@@ -76,6 +76,13 @@ namespace JoyEats.IServices
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        Task RejectionAsync(OrdersRejectionDTO request);
+        Task RejectionAsync(OrdersRejectionDTO ordersRejectionDTO);
+
+        /// <summary>
+        /// 取消订单
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        Task CancelAsync(OrdersCancelDTO ordersCancelDTO);
     }
 }

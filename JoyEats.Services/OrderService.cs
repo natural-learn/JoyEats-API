@@ -323,5 +323,38 @@ namespace JoyEats.Services
             _orderRepository.Update(orders);
             await _unitOfWork.SaveChangesAsync();
         }
+
+        /// <summary>
+        /// 取消订单
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public async Task CancelAsync(OrdersCancelDTO ordersCancelDTO)
+        {
+            // 根据id查询订单
+            Orders? ordersDB = await _orderRepository.GetByIdAsync(ordersCancelDTO.Id)
+                ?? throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
+
+            // 支付状态
+            int payStatus = ordersDB.PayStatus;
+            if (payStatus == OrderStatus.PAID)
+            {
+                // 用户已支付，取消订单需要退款
+                // ...
+                _logger.LogInformation("申请退款：");
+            }
+
+            // 管理端取消订单需要退款，根据订单id更新订单状态、取消原因、取消时间
+            Orders orders = new Orders
+            {
+                Id = ordersDB.Id,
+                Status = OrderStatus.CANCELLED,
+                CancelReason = ordersCancelDTO.CancelReason,
+                CancelTime = DateTime.Now
+            };
+
+            _orderRepository.Update(orders);
+            await _unitOfWork.SaveChangesAsync();
+        }
     }
 }
