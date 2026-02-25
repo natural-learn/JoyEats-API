@@ -356,5 +356,33 @@ namespace JoyEats.Services
             _orderRepository.Update(orders);
             await _unitOfWork.SaveChangesAsync();
         }
+
+        /// <summary>
+        /// 派送订单
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task DeliveryAsync(long id)
+        {
+            // 根据id查询订单
+            Orders? ordersDB = await _orderRepository.GetByIdAsync(id)
+                ?? throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
+
+            // 校验订单是否存在，并且状态为3
+            if (ordersDB == null || !(ordersDB.Status == OrderStatus.CONFIRMED))
+            {
+                throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+            }
+
+            Orders orders = new Orders()
+            {
+                Id = ordersDB.Id,
+                // 更新订单状态,状态转为派送中
+                Status = OrderStatus.DELIVERY_IN_PROGRESS,
+            };
+
+            _orderRepository.Update(orders);
+            await _unitOfWork.SaveChangesAsync();
+        }
     }
 }
