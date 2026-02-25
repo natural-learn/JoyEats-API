@@ -70,5 +70,12 @@ namespace JoyEats.IServices
         /// <param name="request"></param>
         /// <returns></returns>
         Task ConfirmAsync(OrdersConfirmDTO ordersConfirmDTO);
+
+        /// <summary>
+        /// 拒单
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        Task RejectionAsync(OrdersRejectionDTO request);
     }
 }

@@ -68,5 +68,17 @@ namespace JoyEats.Admin.Controllers
             await _orderService.ConfirmAsync(ordersConfirmDTO);
             return ApiResultHelper.Success();
         }
+
+        /// <summary>
+        /// 拒单
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPut("rejection")]
+        public async Task<ActionResult<ApiResult>> Rejection([FromBody] OrdersRejectionDTO ordersRejectionDTO)
+        {
+            await _orderService.RejectionAsync(ordersRejectionDTO);
+            return ApiResultHelper.Success();
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace JoyEats.Core.VO.Order
+﻿namespace JoyEats.Core.DTO.Order
 {
     public class OrdersConfirmDTO
     {

@@ -8,6 +8,7 @@ using JoyEats.IRepository.UnitOfWork;
 using JoyEats.IServices;
 using JoyEats.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
 
 namespace JoyEats.Services
@@ -16,16 +17,18 @@ namespace JoyEats.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICurrentUserContextService _currentUserContextService;
+        private readonly ILogger<OrderService> _logger;
         private readonly IBaseRepository<AddressBook> _addressBookRepository;
         private readonly IBaseRepository<User> _userRepository;
         private readonly IShoppingCartRepository _shoppingCartRepository;
         private readonly IOrderRepository _orderRepository;
         private readonly IOrderDetailRepository _orderDetailRepository;
 
-        public OrderService(IUnitOfWork unitOfWork, ICurrentUserContextService currentUserContextService)
+        public OrderService(IUnitOfWork unitOfWork, ICurrentUserContextService currentUserContextService, ILogger<OrderService> logger)
         {
             _unitOfWork = unitOfWork;
             _currentUserContextService = currentUserContextService;
+            _logger = logger;
             _addressBookRepository = _unitOfWork.GetBaseRepository<AddressBook>();
             _userRepository = _unitOfWork.GetBaseRepository<User>();
             _shoppingCartRepository = _unitOfWork.GetRepository<IShoppingCartRepository>();
@@ -282,6 +285,43 @@ namespace JoyEats.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// 拒单
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public async Task RejectionAsync(OrdersRejectionDTO ordersRejectionDTO)
+        {
+            // 根据id查询订单
+            Orders? ordersDB = await _orderRepository.GetByIdAsync(ordersRejectionDTO.Id)
+                ?? throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
 
+            // 订单只有存在且状态为2（待接单）才可以拒单
+            if (ordersDB == null || !(ordersDB.Status == OrderStatus.TO_BE_CONFIRMED))
+            {
+                throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+            }
+
+            // 支付状态
+            int payStatus = ordersDB.PayStatus;
+            if (payStatus == OrderStatus.PAID)
+            {
+                // 用户已支付，拒单需要退款
+                // ...
+                _logger.LogInformation("申请退款：");
+            }
+
+            // 拒单需要退款，根据订单id更新订单状态、拒单原因、取消时间
+            Orders orders = new Orders
+            {
+                Id = ordersDB.Id,
+                Status = OrderStatus.CANCELLED,
+                RejectionReason = ordersRejectionDTO.RejectionReason,
+                CancelTime = DateTime.Now
+            };
+
+            _orderRepository.Update(orders);
+            await _unitOfWork.SaveChangesAsync();
+        }
     }
 }
