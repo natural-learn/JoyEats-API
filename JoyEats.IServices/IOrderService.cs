@@ -91,5 +91,12 @@ namespace JoyEats.IServices
         /// <param name="id"></param>
         /// <returns></returns>
         Task DeliveryAsync(long id);
+
+        /// <summary>
+        /// 完成订单
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task CompleteAsync(long id);
     }
 }

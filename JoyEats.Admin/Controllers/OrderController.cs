@@ -104,5 +104,17 @@ namespace JoyEats.Admin.Controllers
             await _orderService.DeliveryAsync(id);
             return ApiResultHelper.Success();
         }
+
+        /// <summary>
+        /// 完成订单
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPut("complete/{id}")]
+        public async Task<ActionResult<ApiResult>> Complete(long id)
+        {
+            await _orderService.CompleteAsync(id);
+            return ApiResultHelper.Success();
+        }
     }
 }
