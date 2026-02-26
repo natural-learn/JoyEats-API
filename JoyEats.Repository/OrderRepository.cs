@@ -86,5 +86,34 @@ namespace SkyTakeOut.Repository
                 .Where(predicate)
                 .SumAsync(o => o.Amount);
         }
+
+        /// <summary>
+        /// 根据动态条件统计订单数量
+        /// </summary>
+        /// <param name="map"></param>
+        /// <returns></returns>
+        public async Task<int> CountByMapAsync(Dictionary<string, object> map)
+        {
+            int? status = Convert.ToInt32(map["status"]);
+            DateTime? beginTime = Convert.ToDateTime(map["begin"]);
+            DateTime? endTime = Convert.ToDateTime(map["end"]);
+            Expression<Func<Orders, bool>> predicate = o => true;
+            if (status.HasValue)
+            {
+                predicate = predicate.And(o => o.Status == status);
+            }
+            if (beginTime.HasValue)
+            {
+                predicate = predicate.And(o => o.OrderTime >= beginTime);
+            }
+            if (endTime.HasValue)
+            {
+                predicate = predicate.And(o => o.OrderTime <= endTime);
+            }
+
+            return await GetQueryable()
+                .Where(predicate)
+                .CountAsync();
+        }
     }
 }

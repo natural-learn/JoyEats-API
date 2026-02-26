@@ -20,5 +20,12 @@ namespace JoyEats.IRepository
         /// <param name="map"></param>
         /// <returns></returns>
         Task<decimal> SumByMapAsync(Dictionary<string, object> map);
+
+        /// <summary>
+        /// 根据动态条件统计订单数量
+        /// </summary>
+        /// <param name="map"></param>
+        /// <returns></returns>
+        Task<int> CountByMapAsync(Dictionary<string, object> map);
     }
 }

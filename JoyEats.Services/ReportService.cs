@@ -122,5 +122,69 @@ namespace JoyEats.Services
             }
             return await _userRepository.CountAsync(predicate);
         }
+
+        /// <summary>
+        /// 根据时间区间统计订单数量
+        /// </summary>
+        /// <param name="beginTime"></param>
+        /// <param name="endTime"></param>
+        /// <returns></returns>
+        public async Task<OrderReportVO> GetOrderStatisticsAsync(DateTime beginTime, DateTime endTime)
+        {
+            List<DateTime> dateList = new List<DateTime>();
+            dateList.Add(beginTime);
+
+            while (beginTime < endTime)
+            {
+                beginTime = beginTime.AddDays(1);
+                dateList.Add(beginTime);
+            }
+
+            //每天订单总数集合
+            List<int> orderCountList = new List<int>();
+
+            //每天有效订单数集合
+            List<int> validOrderCountList = new List<int>();
+
+            foreach (DateTime date in dateList)
+            {
+                DateTime begin = date.Date;
+                DateTime end = date.Date.AddDays(1).AddTicks(-1);
+                int orderCount = await GetOrderCountAsync(begin, end, null);
+                int validOrderCount = await GetOrderCountAsync(begin, end, OrderStatus.COMPLETED);
+                orderCountList.Add(validOrderCount);
+                validOrderCountList.Add(validOrderCount);
+            }
+
+            //时间区间内的总订单数
+            int totalOrderCount = orderCountList.Sum();
+            //时间区间内的总有效订单数
+            int validTotalOrderCount = validOrderCountList.Sum();
+            //订单完成率
+            double orderCompletionRate = 0.0;
+            if (totalOrderCount != 0)
+            {
+                orderCompletionRate = totalOrderCount == 0 ? 0 : (double)validTotalOrderCount / totalOrderCount;
+            }
+
+            return new OrderReportVO
+            {
+                DateList = string.Join(",", dateList),
+                OrderCountList = string.Join(",", orderCountList),
+                ValidOrderCountList = string.Join(",", validOrderCountList),
+                TotalOrderCount = totalOrderCount,
+                ValidOrderCount = validTotalOrderCount,
+                OrderCompletionRate = orderCompletionRate
+            };
+        }
+
+        private async Task<int> GetOrderCountAsync(DateTime begin, DateTime end, int? status)
+        {
+            Dictionary<string, object> map = new Dictionary<string, object>();
+            map.Add("status", status);
+            map.Add("begin", begin);
+            map.Add("end", end);
+            return await _orderRepository.CountByMapAsync(map);
+        }
     }
 }
