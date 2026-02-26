@@ -29,6 +29,17 @@ namespace JoyEats.Admin.Controllers
             return ApiResultHelper.Success(turnoverReportDto);
         }
 
-
+        /// <summary>
+        /// 用户数据统计
+        /// </summary>
+        /// <param name="beginTime"></param>
+        /// <param name="endTime"></param>
+        /// <returns></returns>
+        [HttpGet("userStatistics")]
+        public async Task<ActionResult<ApiResult<UserReportVO>>> UserStatistics(DateTime beginTime, DateTime endTime)
+        {
+            UserReportVO userReportDto = await _reportService.GetUserStatisticsAsync(beginTime, endTime);
+            return ApiResultHelper.Success(userReportDto);
+        }
     }
 }

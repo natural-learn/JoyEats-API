@@ -12,5 +12,13 @@ namespace JoyEats.IServices
         /// <param name="endTime"></param>
         /// <returns></returns>
         Task<TurnoverReportVO> GetTurnoverAsync(DateTime beginTime, DateTime endTime);
+
+        /// <summary>
+        /// 根据时间区间统计用户数量
+        /// </summary>
+        /// <param name="beginTime"></param>
+        /// <param name="endTime"></param>
+        /// <returns></returns>
+        Task<UserReportVO> GetUserStatisticsAsync(DateTime beginTime, DateTime endTime);
     }
 }
