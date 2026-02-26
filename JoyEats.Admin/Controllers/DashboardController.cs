@@ -31,5 +31,16 @@ namespace JoyEats.Admin.Controllers
             BusinessDataVO businessDataDto = await _dashboardService.GetBusinessDataAsync(begin, end);
             return ApiResultHelper.Success(businessDataDto);
         }
+
+        /// <summary>
+        /// 查询订单管理数据
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("overviewOrders")]
+        public async Task<ActionResult<ApiResult<OrderOverViewVO>>> OrderOverView()
+        {
+            OrderOverViewVO orderOverViewDto = await _dashboardService.GetOrderOverViewAsync();
+            return ApiResultHelper.Success(orderOverViewDto);
+        }
     }
 }

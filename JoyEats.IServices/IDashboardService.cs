@@ -12,5 +12,11 @@ namespace JoyEats.IServices
         /// <param name="end"></param>
         /// <returns></returns>
         Task<BusinessDataVO> GetBusinessDataAsync(DateTime begin, DateTime end);
+
+        /// <summary>
+        /// 查询订单管理数据
+        /// </summary>
+        /// <returns></returns>
+        Task<OrderOverViewVO> GetOrderOverViewAsync();
     }
 }

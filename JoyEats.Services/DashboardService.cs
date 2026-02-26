@@ -74,5 +74,46 @@ namespace JoyEats.Services
                 NewUsers = newUsers
             };
         }
+
+        /// <summary>
+        /// 查询订单管理数据
+        /// </summary>
+        /// <returns></returns>
+        public async Task<OrderOverViewVO> GetOrderOverViewAsync()
+        {
+            Dictionary<string, object> map = new Dictionary<string, object>()
+            {
+                { "begin", DateTime.Now.Date },
+                { "status", OrderStatus.TO_BE_CONFIRMED }
+            };
+
+            //待接单
+            int waitingOrders = await _orderRepository.CountByMapAsync(map);
+
+            //待派送
+            map["status"] = OrderStatus.CONFIRMED;  //在C#中不能使用重复添加的方式来替换对应键的值，会抛出异常
+            int deliveredOrders = await _orderRepository.CountByMapAsync(map);
+
+            //已完成
+            map["status"] = OrderStatus.COMPLETED;
+            int completedOrders = await _orderRepository.CountByMapAsync(map);
+
+            //已取消
+            map["status"] = OrderStatus.CANCELLED;
+            int cancelledOrders = await _orderRepository.CountByMapAsync(map);
+
+            //全部订单
+            map["status"] = null;
+            int allOrders = await _orderRepository.CountByMapAsync(map);
+
+            return new OrderOverViewVO
+            {
+                WaitingOrders = waitingOrders,
+                DeliveredOrders = deliveredOrders,
+                CompletedOrders = completedOrders,
+                CancelledOrders = cancelledOrders,
+                AllOrders = allOrders
+            };
+        }
     }
 }
