@@ -2,7 +2,7 @@
 using JoyEats.IRepository;
 using JoyEats.Models;
 
-namespace SkyTakeOut.Repository
+namespace JoyEats.Repository
 {
     public class OrderDetailRepository : EFCoreRepository<OrderDetail>, IOrderDetailRepository
     {

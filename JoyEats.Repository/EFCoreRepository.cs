@@ -4,7 +4,7 @@ using JoyEats.IRepository;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
-namespace SkyTakeOut.Repository
+namespace JoyEats.Repository
 {
     public class EFCoreRepository<TEntity> : IBaseRepository<TEntity> where TEntity : class
     {

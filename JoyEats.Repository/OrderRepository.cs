@@ -7,7 +7,7 @@ using JoyEats.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
-namespace SkyTakeOut.Repository
+namespace JoyEats.Repository
 {
     public class OrderRepository : EFCoreRepository<Orders>, IOrderRepository
     {

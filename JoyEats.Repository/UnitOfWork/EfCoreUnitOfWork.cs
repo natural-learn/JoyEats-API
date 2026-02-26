@@ -4,9 +4,10 @@ using JoyEats.IRepository;
 using JoyEats.IRepository.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using SkyTakeOut.Repository;
 using System.Data;
 
-namespace SkyTakeOut.Repository.UnitOfWork
+namespace JoyEats.Repository.UnitOfWork
 {
     public class EfCoreUnitOfWork : IUnitOfWork
     {
@@ -17,8 +18,8 @@ namespace SkyTakeOut.Repository.UnitOfWork
 
         public EfCoreUnitOfWork(AppDbContext dbContext, IComponentContext componentContext)
         {
-            this._dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
-            this._componentContext = componentContext;
+            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+            _componentContext = componentContext;
         }
 
         /// <summary>

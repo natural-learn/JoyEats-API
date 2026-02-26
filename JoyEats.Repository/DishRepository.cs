@@ -3,7 +3,7 @@ using JoyEats.IRepository;
 using JoyEats.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace SkyTakeOut.Repository
+namespace JoyEats.Repository
 {
     public class DishRepository : EFCoreRepository<Dish>, IDishRepository
     {
