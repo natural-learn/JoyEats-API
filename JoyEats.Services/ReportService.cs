@@ -1,4 +1,5 @@
-﻿using JoyEats.Core.VO.Report;
+﻿using JoyEats.Core.DTO.Report;
+using JoyEats.Core.VO.Report;
 using JoyEats.IRepository;
 using JoyEats.IRepository.UnitOfWork;
 using JoyEats.IServices;
@@ -185,6 +186,28 @@ namespace JoyEats.Services
             map.Add("begin", begin);
             map.Add("end", end);
             return await _orderRepository.CountByMapAsync(map);
+        }
+
+        /// <summary>
+        /// 查询指定时间区间内的销量排名top10
+        /// </summary>
+        /// <param name="beginTime"></param>
+        /// <param name="endTime"></param>
+        /// <returns></returns>
+        public async Task<SalesTop10ReportVO> GetSalesTop10Async(DateTime beginTime, DateTime endTime)
+        {
+            DateTime begin = DateTime.Now.Date;
+            DateTime end = DateTime.Now.Date.AddDays(1).AddTicks(-1);
+            List<GoodsSalesDTO> goodsSalesDTOList = await _orderRepository.GetSalesTop10Async(beginTime, endTime);
+
+            string nameList = string.Join(",", goodsSalesDTOList.Select(dto => dto.Name));
+            string numberList = string.Join(",", goodsSalesDTOList.Select(dto => dto.Number));
+
+            return new SalesTop10ReportVO
+            {
+                NameList = nameList,
+                NumberList = numberList
+            };
         }
     }
 }

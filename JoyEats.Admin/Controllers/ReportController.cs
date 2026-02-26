@@ -54,5 +54,18 @@ namespace JoyEats.Admin.Controllers
             OrderReportVO orderReportDto = await _reportService.GetOrderStatisticsAsync(beginTime, endTime);
             return ApiResultHelper.Success(orderReportDto);
         }
+
+        /// <summary>
+        /// 销量排名统计
+        /// </summary>
+        /// <param name="beginTime"></param>
+        /// <param name="endTime"></param>
+        /// <returns></returns>
+        [HttpGet("top10")]
+        public async Task<ActionResult<ApiResult<SalesTop10ReportVO>>> Top10(DateTime beginTime, DateTime endTime)
+        {
+            SalesTop10ReportVO salesTop10ReportDto = await _reportService.GetSalesTop10Async(beginTime, endTime);
+            return ApiResultHelper.Success(salesTop10ReportDto);
+        }
     }
 }

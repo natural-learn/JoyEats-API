@@ -1,5 +1,6 @@
 ﻿using JoyEats.Common;
 using JoyEats.Core.DTO.Order;
+using JoyEats.Core.DTO.Report;
 using JoyEats.EntityFrameworkCore;
 using JoyEats.IRepository;
 using JoyEats.Models;
@@ -10,9 +11,14 @@ namespace SkyTakeOut.Repository
 {
     public class OrderRepository : EFCoreRepository<Orders>, IOrderRepository
     {
+        private readonly DbSet<OrderDetail> orderDetail;
+        private readonly DbSet<Orders> orders;
+
         public OrderRepository(AppDbContext dbContext)
             : base(dbContext)
         {
+            orderDetail = dbContext.Set<OrderDetail>();
+            orders = dbContext.Set<Orders>();
         }
 
         /// <summary>
@@ -114,6 +120,31 @@ namespace SkyTakeOut.Repository
             return await GetQueryable()
                 .Where(predicate)
                 .CountAsync();
+        }
+
+        /// <summary>
+        /// 查询商品销量排名
+        /// </summary>
+        /// <param name="beginTime"></param>
+        /// <param name="endTime"></param>
+        /// <returns></returns>
+        public async Task<List<GoodsSalesDTO>> GetSalesTop10Async(DateTime? beginTime, DateTime? endTime)
+        {
+            var query = from od in orderDetail
+                        join o in orders on od.OrderId equals o.Id
+                        where o.Status == 5
+                        where !beginTime.HasValue || o.OrderTime >= beginTime
+                        where !endTime.HasValue || o.OrderTime <= endTime
+                        group od by od.Name into g
+                        select new GoodsSalesDTO
+                        {
+                            Name = g.Key,
+                            Number = g.Sum(od => od.Number),
+                        }
+                        into grouped
+                        orderby grouped.Number descending
+                        select grouped;
+            return await query.Skip(0).Take(10).ToListAsync();
         }
     }
 }

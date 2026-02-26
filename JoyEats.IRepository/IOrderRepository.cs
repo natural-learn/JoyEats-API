@@ -1,6 +1,7 @@
 ﻿using JoyEats.Common;
 using JoyEats.Core.Autofac.DependencyInjection;
 using JoyEats.Core.DTO.Order;
+using JoyEats.Core.DTO.Report;
 using JoyEats.Models;
 
 namespace JoyEats.IRepository
@@ -27,5 +28,13 @@ namespace JoyEats.IRepository
         /// <param name="map"></param>
         /// <returns></returns>
         Task<int> CountByMapAsync(Dictionary<string, object> map);
+
+        /// <summary>
+        /// 查询商品销量排名
+        /// </summary>
+        /// <param name="beginTime"></param>
+        /// <param name="endTime"></param>
+        /// <returns></returns>
+        Task<List<GoodsSalesDTO>> GetSalesTop10Async(DateTime? beginTime, DateTime? endTime);
     }
 }

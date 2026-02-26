@@ -28,5 +28,13 @@ namespace JoyEats.IServices
         /// <param name="endTime"></param>
         /// <returns></returns>
         Task<OrderReportVO> GetOrderStatisticsAsync(DateTime beginTime, DateTime endTime);
+
+        /// <summary>
+        /// 查询指定时间区间内的销量排名top10
+        /// </summary>
+        /// <param name="beginTime"></param>
+        /// <param name="endTime"></param>
+        /// <returns></returns>
+        Task<SalesTop10ReportVO> GetSalesTop10Async(DateTime beginTime, DateTime endTime);
     }
 }
