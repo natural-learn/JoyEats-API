@@ -18,5 +18,11 @@ namespace JoyEats.IServices
         /// </summary>
         /// <returns></returns>
         Task<OrderOverViewVO> GetOrderOverViewAsync();
+
+        /// <summary>
+        /// 查询菜品总览
+        /// </summary>
+        /// <returns></returns>
+        Task<DishOverViewVO> GetDishOverViewAsync();
     }
 }

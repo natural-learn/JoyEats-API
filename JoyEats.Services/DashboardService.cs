@@ -1,8 +1,10 @@
-﻿using JoyEats.Core.VO.Dashboard;
+﻿using JoyEats.Common.Constant;
+using JoyEats.Core.VO.Dashboard;
 using JoyEats.IRepository;
 using JoyEats.IRepository.UnitOfWork;
 using JoyEats.IServices;
 using JoyEats.Models;
+using JoyEats.Repository;
 
 namespace JoyEats.Services
 {
@@ -11,12 +13,14 @@ namespace JoyEats.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IOrderRepository _orderRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IDishRepository _dishRepository;
 
         public DashboardService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
             _orderRepository = _unitOfWork.GetRepository<IOrderRepository>();
             _userRepository = _unitOfWork.GetRepository<IUserRepository>();
+            _dishRepository = _unitOfWork.GetRepository<IDishRepository>();
         }
 
         /// <summary>
@@ -113,6 +117,29 @@ namespace JoyEats.Services
                 CompletedOrders = completedOrders,
                 CancelledOrders = cancelledOrders,
                 AllOrders = allOrders
+            };
+        }
+
+        /// <summary>
+        /// 查询菜品总览
+        /// </summary>
+        /// <returns></returns>
+        public async Task<DishOverViewVO> GetDishOverViewAsync()
+        {
+            Dictionary<string, object> map = new Dictionary<string, object>()
+            {
+                { "status", StatusConstant.ENABLE },
+            };
+
+            int sold = await _dishRepository.CountByMapAsync(map);
+
+            map["status"] = StatusConstant.DISABLE;
+            int discontinued = await _dishRepository.CountByMapAsync(map);
+
+            return new DishOverViewVO
+            {
+                Sold = sold,
+                Discontinued = discontinued
             };
         }
     }

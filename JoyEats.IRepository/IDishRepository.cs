@@ -11,5 +11,12 @@ namespace JoyEats.IRepository
         /// <param name="setmealId"></param>
         /// <returns></returns>
         public Task<List<Dish>> GetBySetmealIdAsync(long setmealId);
+
+        /// <summary>
+        /// 根据条件统计菜品数量
+        /// </summary>
+        /// <param name="map"></param>
+        /// <returns></returns>
+        Task<int> CountByMapAsync(Dictionary<string, object> map);
     }
 }
