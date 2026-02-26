@@ -53,5 +53,16 @@ namespace JoyEats.Admin.Controllers
             DishOverViewVO dishOverViewDto = await _dashboardService.GetDishOverViewAsync();
             return ApiResultHelper.Success(dishOverViewDto);
         }
+
+        /// <summary>
+        /// 查询套餐总览
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("overviewSetmeals")]
+        public async Task<ActionResult<ApiResult<SetmealOverViewVO>>> SetmealOverView()
+        {
+            SetmealOverViewVO setmealOverViewDto = await _dashboardService.GetSetmealOverViewAsync();
+            return ApiResultHelper.Success(setmealOverViewDto);
+        }
     }
 }

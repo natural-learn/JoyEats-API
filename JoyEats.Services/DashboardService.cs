@@ -14,6 +14,7 @@ namespace JoyEats.Services
         private readonly IOrderRepository _orderRepository;
         private readonly IUserRepository _userRepository;
         private readonly IDishRepository _dishRepository;
+        private readonly ISetmealRepository _setmealRepository;
 
         public DashboardService(IUnitOfWork unitOfWork)
         {
@@ -21,6 +22,7 @@ namespace JoyEats.Services
             _orderRepository = _unitOfWork.GetRepository<IOrderRepository>();
             _userRepository = _unitOfWork.GetRepository<IUserRepository>();
             _dishRepository = _unitOfWork.GetRepository<IDishRepository>();
+            _setmealRepository = _unitOfWork.GetRepository<ISetmealRepository>();
         }
 
         /// <summary>
@@ -137,6 +139,28 @@ namespace JoyEats.Services
             int discontinued = await _dishRepository.CountByMapAsync(map);
 
             return new DishOverViewVO
+            {
+                Sold = sold,
+                Discontinued = discontinued
+            };
+        }
+
+        /// <summary>
+        /// 查询套餐总览
+        /// </summary>
+        /// <returns></returns>
+        public async Task<SetmealOverViewVO> GetSetmealOverViewAsync()
+        {
+            Dictionary<string, object> map = new Dictionary<string, object>()
+            {
+                { "status", StatusConstant.ENABLE },
+            };
+            int sold = await _setmealRepository.CountByMapAsync(map);
+
+            map["status"] = StatusConstant.DISABLE;
+            int discontinued = await _setmealRepository.CountByMapAsync(map);
+
+            return new SetmealOverViewVO
             {
                 Sold = sold,
                 Discontinued = discontinued
