@@ -17,6 +17,7 @@ using Serilog.Events;
 using System.Net;
 using System.Reflection;
 using System.Text;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -72,6 +73,9 @@ builder.Services.AddControllers()
         // api日期统一返回格式：（"yyyy-MM-dd HH:mm:ss"）
         options.JsonSerializerOptions.Converters.Add(new DateTimeConverter());
     });
+var jsonOptions = new JsonSerializerOptions();
+jsonOptions.Converters.Add(new DateTimeConverter());
+builder.Services.AddSingleton(jsonOptions);
 
 // JWT
 builder.Services.Configure<JwtAdminSettings>(builder.Configuration.GetSection("Jwt"));

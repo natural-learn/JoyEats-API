@@ -32,12 +32,6 @@ namespace JoyEats.Admin.Controllers
             _jwtAdminSettings = options.Value;
         }
 
-        [HttpGet]
-        public IActionResult Get()
-        {
-            return Ok("EmployeeController");
-        }
-
         /// <summary>
         /// 员工登录
         /// </summary>
@@ -81,7 +75,7 @@ namespace JoyEats.Admin.Controllers
                 Token = token
             };
 
-            await StackExchangeRedisHelper.StringSetAsync(RedisConstant.EmployeeId, employee.Id.ToString(), TimeSpan.FromMinutes(_jwtAdminSettings.ExpireMinutes));
+            await StackExchangeRedisHelper.StringSetAsync(RedisConstant.UserId, employee.Id.ToString(), TimeSpan.FromMinutes(_jwtAdminSettings.ExpireMinutes));
             return ApiResultHelper.Success(employeeLoginVo);
         }
 

@@ -4,7 +4,6 @@ using JoyEats.IRepository;
 using JoyEats.IRepository.UnitOfWork;
 using JoyEats.IServices;
 using JoyEats.Models;
-using JoyEats.Repository;
 
 namespace JoyEats.Services
 {

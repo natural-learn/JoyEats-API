@@ -8,12 +8,9 @@ namespace JoyEats.Repository
 {
     public class DishRepository : EFCoreRepository<Dish>, IDishRepository
     {
-        private readonly AppDbContext _dbContext;
-
         public DishRepository(AppDbContext dbContext) 
             : base(dbContext)
         {
-            _dbContext = dbContext;
         }
 
         /// <summary>

@@ -30,12 +30,6 @@ namespace JoyEats.Repository
         {
             Expression<Func<Orders, bool>> predicate = o => o.UserId == ordersPageQueryDTO.UserId;
 
-            var query = GetQueryable().Where(predicate);
-            if (query.Count() == 0)
-            {
-                return PagedResult<Orders>.GetPagedResult(new List<Orders>(), ordersPageQueryDTO.Page, ordersPageQueryDTO.PageSize, 0);
-            }
-
             if (!string.IsNullOrEmpty(ordersPageQueryDTO.Number))
             {
                 predicate = predicate.And(o => o.Number.Contains(ordersPageQueryDTO.Number));
@@ -59,6 +53,14 @@ namespace JoyEats.Repository
             if (ordersPageQueryDTO.EndTime.HasValue)
             {
                 predicate = predicate.And(o => o.OrderTime <= ordersPageQueryDTO.EndTime.Value);
+            }
+
+            var query = GetQueryable().Where(predicate);
+
+            int totalCount = await query.CountAsync();
+            if (totalCount == 0)
+            {
+                return PagedResult<Orders>.GetPagedResult(new List<Orders>(), ordersPageQueryDTO.Page, ordersPageQueryDTO.PageSize, totalCount);
             }
 
             var orderList = await query.Where(predicate).OrderByDescending(o => o.OrderTime).ToListAsync();

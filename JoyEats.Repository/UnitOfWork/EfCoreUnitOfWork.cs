@@ -4,7 +4,6 @@ using JoyEats.IRepository;
 using JoyEats.IRepository.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
-using SkyTakeOut.Repository;
 using System.Data;
 
 namespace JoyEats.Repository.UnitOfWork

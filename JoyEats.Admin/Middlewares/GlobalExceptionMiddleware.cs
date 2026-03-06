@@ -1,11 +1,13 @@
 ﻿using JoyEats.Common;
+using System.Text.Json;
 
 namespace JoyEats.Admin.Middlewares
 {
-    public class GlobalExceptionMiddleware(RequestDelegate next, IWebHostEnvironment env)
+    public class GlobalExceptionMiddleware(RequestDelegate next, IWebHostEnvironment env,JsonSerializerOptions jsonOptions)
     {
         private readonly RequestDelegate _next = next;
         private readonly IWebHostEnvironment _env = env;
+        private readonly JsonSerializerOptions _jsonOptions = jsonOptions;
 
         /// <summary>
         /// 捕获后续中间件的异常并处理
@@ -56,7 +58,8 @@ namespace JoyEats.Admin.Middlewares
             };
 
             context.Response.StatusCode = response.Code;
-            await context.Response.WriteAsJsonAsync(response);
+            var json = JsonSerializer.Serialize(response, _jsonOptions);
+            await context.Response.WriteAsync(json);
         }
     }
 }
